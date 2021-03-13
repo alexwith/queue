@@ -25,6 +25,7 @@ subprojects {
     }
 
     dependencies {
+        implementation("me.hyfe.helper:core:1.0.0")
         implementation("org.jetbrains:annotations:16.0.2")
     }
 }

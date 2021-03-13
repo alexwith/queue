@@ -28,10 +28,6 @@ public class QueueProxyPlayer<T> implements Comparable<QueueProxyPlayer<?>> {
         return this.uuid;
     }
 
-    public int getPriority() {
-        return this.priority;
-    }
-
     public String encode() {
         return FastUUID.toString(this.uuid) + ":" + this.priority;
     }

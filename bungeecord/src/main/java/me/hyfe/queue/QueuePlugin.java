@@ -6,11 +6,12 @@ import me.hyfe.queue.listeners.ConnectionListener;
 import me.hyfe.queue.proxy.ProxyDelegate;
 import me.hyfe.queue.queue.QueueManager;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlayer> {
+public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlayer, ServerInfo> {
     private Bootstrap bootstrap;
 
     private final ProxyDelegate<ProxiedPlayer> proxyDelegate = ProxyServer.getInstance()::getPlayer;
@@ -31,7 +32,7 @@ public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlay
     }
 
     @Override
-    public @NotNull QueueManager<ProxiedPlayer> createQueueManager() {
+    public @NotNull QueueManager<ProxiedPlayer, ServerInfo> createQueueManager() {
         return new BungeeQueueManager(this);
     }
 
