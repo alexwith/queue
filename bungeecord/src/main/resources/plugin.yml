@@ -1,0 +1,4 @@
+name: Queue
+main: me.hyfe.queue.QueuePlugin
+version: 1.0.0
+author: hyfe

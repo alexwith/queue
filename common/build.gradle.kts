@@ -4,14 +4,13 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
-    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
-    maven { url = uri("https://hub.spigotmc.org/nexus/content/groups/public/") }
-    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
+
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
+    implementation("me.hyfe.helper:core:1.0.0")
+    implementation("redis.clients:jedis:3.5.1")
+    implementation("org.yaml:snakeyaml:1.28");
 }
 
 tasks.processResources {

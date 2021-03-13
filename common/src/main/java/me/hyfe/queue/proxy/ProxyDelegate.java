@@ -1,4 +1,4 @@
-package me.hyfe.queue;
+package me.hyfe.queue.proxy;
 
 public interface ProxyDelegate {
 
