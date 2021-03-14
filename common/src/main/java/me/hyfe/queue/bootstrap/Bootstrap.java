@@ -10,12 +10,19 @@ import me.hyfe.queue.redis.Redis;
 import me.hyfe.queue.redis.RedisProvider;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 public class Bootstrap implements RedisProvider {
     private final ConfigController configController;
     private final Redis redis;
     private final QueueManager<?, ?> queueManager;
 
     private static Bootstrap instance;
+
+    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
+    public static final ScheduledExecutorService SCHEDULED_EXECUTOR = Executors.newScheduledThreadPool(10);
 
     public Bootstrap(BootstrapProvider<?, ?> parent) {
         instance = this;

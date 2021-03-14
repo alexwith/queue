@@ -25,7 +25,7 @@ public class BungeeConnectionListener extends ConnectionListener<BungeeQueueMana
         Server playerServer = player.getServer();
         UUID uuid = player.getUniqueId();
         String name = target.getName();
-        this.callConnect(player, uuid, playerServer, () -> playerServer.getInfo().getName(), target, name, () -> event.setCancelled(true));
+        this.callConnect(player, uuid, playerServer, () -> playerServer.getInfo().getName(), target, name, () -> event.setCancelled(true), player::hasPermission, target.isRestricted());
     }
 
     @EventHandler

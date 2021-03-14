@@ -1,5 +1,6 @@
 poll-interval: 5000 # milliseconds
-position-interval: 1000 # milliseconds
+position-interval: 5000 # milliseconds
+bypass-permission: "queue.bypass"
 
 hubs:
   - "hub"

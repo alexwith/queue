@@ -14,5 +14,6 @@ public class ConfigKeys extends KeysHolder {
 
     public static final ConfigKey<Integer> POLL_INTERVAL = ConfigKey.of(ConfigKeys.class, "poll-interval");
     public static final ConfigKey<Integer> POSITION_INTERVAL = ConfigKey.of(ConfigKeys.class, "position-interval");
+    public static final ConfigKey<String> BYPASS_PERMISSION = ConfigKey.of(ConfigKeys.class, "bypass-permission");
     public static final ConfigKey<List<String>> HUBS = ConfigKey.of(ConfigKeys.class, "hubs");
 }

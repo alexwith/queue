@@ -1,7 +1,7 @@
 package me.hyfe.queue.bootstrap;
 
-import me.hyfe.queue.proxy.ProxyDelegate;
-import me.hyfe.queue.proxy.ProxyMessageDelegate;
+import me.hyfe.queue.proxy.delegates.ProxyDelegate;
+import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
 import org.jetbrains.annotations.NotNull;
 

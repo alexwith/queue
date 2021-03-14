@@ -1,7 +1,7 @@
 package me.hyfe.queue.config.typekeys;
 
 import me.hyfe.queue.config.KeysHolder;
-import me.hyfe.queue.proxy.ProxyMessageDelegate;
+import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.text.replacer.Replacer;
 
 public class LangKey extends ConfigKey<String> {

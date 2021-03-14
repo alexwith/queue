@@ -2,8 +2,8 @@ package me.hyfe.queue;
 
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
-import me.hyfe.queue.proxy.ProxyDelegate;
-import me.hyfe.queue.proxy.ProxyMessageDelegate;
+import me.hyfe.queue.proxy.delegates.ProxyDelegate;
+import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,13 +16,7 @@ public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlay
     private Bootstrap bootstrap;
 
     private final ProxyDelegate<ProxiedPlayer> proxyDelegate = ProxyServer.getInstance()::getPlayer;
-    private final ProxyMessageDelegate<ProxiedPlayer> messageDelegate = new ProxyMessageDelegate<ProxiedPlayer>() {
-
-        @Override
-        public void messageDelegate(ProxiedPlayer player, String message) {
-            player.sendMessage(new TextComponent(message));
-        }
-    };
+    private final ProxyMessageDelegate<ProxiedPlayer> messageDelegate = (player, message) -> player.sendMessage(new TextComponent(message));
 
     @Override
     public void onEnable() {

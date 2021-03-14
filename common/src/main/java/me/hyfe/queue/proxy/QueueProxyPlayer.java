@@ -1,5 +1,6 @@
 package me.hyfe.queue.proxy;
 
+import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.uuid.FastUUID;
 import org.jetbrains.annotations.NotNull;
 

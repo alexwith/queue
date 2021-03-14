@@ -1,6 +1,6 @@
 package me.hyfe.queue.queue;
 
-import me.hyfe.queue.proxy.ProxyDelegate;
+import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.proxy.QueueProxyPlayer;
 import me.hyfe.queue.proxy.ServerSender;
 import me.hyfe.queue.redis.RedisProvider;

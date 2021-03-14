@@ -1,5 +1,7 @@
 package me.hyfe.queue.config;
 
+import me.hyfe.queue.bootstrap.Bootstrap;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -26,7 +28,7 @@ public class ConfigController {
             for (Config config : this.configs.values()) {
                 config.reload().join();
             }
-        });
+        }, Bootstrap.EXECUTOR);
     }
 
     public void registerConfigs(KeysHolder... keyHolders) {

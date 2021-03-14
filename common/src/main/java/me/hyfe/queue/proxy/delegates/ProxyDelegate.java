@@ -1,4 +1,4 @@
-package me.hyfe.queue.proxy;
+package me.hyfe.queue.proxy.delegates;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
