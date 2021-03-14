@@ -6,10 +6,9 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.server.ServerInfo;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
-import me.hyfe.queue.listeners.ConnectionListener;
 import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
@@ -17,27 +16,27 @@ import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 @Plugin(id = "queue", name = "Queue", version = "1.0.0", authors = {"hyfe"})
-public class QueuePlugin implements BootstrapProvider<Player, ServerInfo> {
+public class QueuePlugin implements BootstrapProvider<Player, RegisteredServer> {
     private final Bootstrap bootstrap;
+    private final ProxyServer proxy;
 
     private final ProxyDelegate<Player> proxyDelegate;
-    private final ProxyMessageDelegate<Player> messageDelegate = new ProxyMessageDelegate<Player>() {
-
-        @Override
-        public void messageDelegate(Player player, String message) {
-            player.sendMessage(TextComponent.of(message));
-        }
-    };
+    private final ProxyMessageDelegate<Player> messageDelegate = (player, message) -> player.sendMessage(TextComponent.of(message));
 
     @Inject
-    public QueuePlugin(ProxyServer server) {
+    public QueuePlugin(ProxyServer proxy) {
+        this.proxy = proxy;
         this.bootstrap = Bootstrap.create(this);
-        this.proxyDelegate = (uuid) -> server.getPlayer(uuid).orElse(null);
+        this.proxyDelegate = (uuid) -> proxy.getPlayer(uuid).orElse(null);
     }
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
         this.bootstrap.terminate();
+    }
+
+    public ProxyServer getProxy() {
+        return this.proxy;
     }
 
     @Override
@@ -46,8 +45,8 @@ public class QueuePlugin implements BootstrapProvider<Player, ServerInfo> {
     }
 
     @Override
-    public @NotNull QueueManager<Player, ServerInfo> createQueueManager() {
-        return null;
+    public @NotNull QueueManager<Player, RegisteredServer> createQueueManager() {
+        return new VelocityQueueManager(this);
     }
 
     @Override
@@ -62,6 +61,6 @@ public class QueuePlugin implements BootstrapProvider<Player, ServerInfo> {
 
     @Override
     public void registerListeners() {
-        new ConnectionListener();
+        new VelocityConnectionListener();
     }
 }

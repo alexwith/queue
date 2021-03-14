@@ -1,5 +1,6 @@
 package me.hyfe.queue.proxy;
 
+import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.config.keys.ConfigKeys;
 import me.hyfe.queue.config.keys.LangKeys;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
@@ -11,32 +12,32 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public abstract class ConnectionListener<QM extends QueueManager<P, T>, P, S, T> {
+public class ConnectionListener<QM extends QueueManager<P, T>, P, S, T> {
     private final QM queueManager;
     private final ProxyMessageDelegate<P> messageDelegate;
 
-    public ConnectionListener(QM queueManager) {
-        this.queueManager = queueManager;
-        this.messageDelegate = queueManager.getMessageDelegate();
+    public ConnectionListener() {
+        this.queueManager = Bootstrap.get().getQueueManager();
+        this.messageDelegate = this.queueManager.getMessageDelegate();
     }
 
-    public void callConnect(P player, UUID uuid, S playerServer, Supplier<String> playerServerName, T target, String name, Runnable cancel, Predicate<String> canBypass, boolean isRestricted) {
-        if (playerServer == null || ConfigKeys.HUBS.get().contains(name) || this.queueManager.isIntTransit(player)) {
+    public void callConnect(P player, UUID uuid, S original, Supplier<String> originalName, T target, String targetName, Runnable cancel, Predicate<String> canBypass) {
+        if (original == null || ConfigKeys.HUBS.get().contains(targetName) || this.queueManager.isIntTransit(player)) {
             return;
         }
         if (canBypass.test(ConfigKeys.BYPASS_PERMISSION.get())) {
             LangKeys.BYPASSING_QUEUE.send(player, this.messageDelegate);
             return;
-        } else if (isRestricted) {
+        }/* else if (isRestricted) {
             LangKeys.SERVER_WHITELISTED.send(player, this.messageDelegate, replacer -> replacer
                     .set("server", name)
             );
             return;
-        }
+        }*/
         cancel.run();
-        if (playerServerName.get().equals(name)) {
+        if (originalName.get().equals(targetName)) {
             LangKeys.ALREADY_ON_SERVER.send(player, this.messageDelegate, replacer -> replacer
-                    .set("server", name)
+                    .set("server", targetName)
             );
             return;
         }
@@ -48,7 +49,7 @@ public abstract class ConnectionListener<QM extends QueueManager<P, T>, P, S, T>
                 );
                 return;
             }
-            this.queueManager.queue(player, uuid, name, target).join();
+            this.queueManager.queue(player, uuid, targetName, target).join();
         }).exceptionally((ex) -> {
             ex.printStackTrace();
             return null;
