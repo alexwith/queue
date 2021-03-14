@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     java
     id("com.github.johnrengelman.shadow")
@@ -14,4 +16,8 @@ dependencies {
 
 tasks.processResources {
     expand("version" to project.version)
+}
+
+val shadowJar by tasks.getting(ShadowJar::class) {
+    archiveFileName.set(project.parent!!.name + "-" + project.name + ".jar")
 }
