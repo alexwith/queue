@@ -11,7 +11,9 @@ import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
 import me.hyfe.queue.listeners.ConnectionListener;
 import me.hyfe.queue.proxy.ProxyDelegate;
+import me.hyfe.queue.proxy.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
+import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 @Plugin(id = "queue", name = "Queue", version = "1.0.0", authors = {"hyfe"})
@@ -19,6 +21,13 @@ public class QueuePlugin implements BootstrapProvider<Player, ServerInfo> {
     private final Bootstrap bootstrap;
 
     private final ProxyDelegate<Player> proxyDelegate;
+    private final ProxyMessageDelegate<Player> messageDelegate = new ProxyMessageDelegate<Player>() {
+
+        @Override
+        public void messageDelegate(Player player, String message) {
+            player.sendMessage(TextComponent.of(message));
+        }
+    };
 
     @Inject
     public QueuePlugin(ProxyServer server) {
@@ -44,6 +53,11 @@ public class QueuePlugin implements BootstrapProvider<Player, ServerInfo> {
     @Override
     public @NotNull ProxyDelegate<Player> getProxyDelegate() {
         return this.proxyDelegate;
+    }
+
+    @Override
+    public @NotNull ProxyMessageDelegate<Player> getMessageDelegate() {
+        return this.messageDelegate;
     }
 
     @Override

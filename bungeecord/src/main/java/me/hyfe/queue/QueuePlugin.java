@@ -2,10 +2,11 @@ package me.hyfe.queue;
 
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
-import me.hyfe.queue.listeners.ConnectionListener;
 import me.hyfe.queue.proxy.ProxyDelegate;
+import me.hyfe.queue.proxy.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -15,6 +16,13 @@ public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlay
     private Bootstrap bootstrap;
 
     private final ProxyDelegate<ProxiedPlayer> proxyDelegate = ProxyServer.getInstance()::getPlayer;
+    private final ProxyMessageDelegate<ProxiedPlayer> messageDelegate = new ProxyMessageDelegate<ProxiedPlayer>() {
+
+        @Override
+        public void messageDelegate(ProxiedPlayer player, String message) {
+            player.sendMessage(new TextComponent(message));
+        }
+    };
 
     @Override
     public void onEnable() {
@@ -42,7 +50,12 @@ public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlay
     }
 
     @Override
+    public @NotNull ProxyMessageDelegate<ProxiedPlayer> getMessageDelegate() {
+        return this.messageDelegate;
+    }
+
+    @Override
     public void registerListeners() {
-        this.getProxy().getPluginManager().registerListener(this, new ConnectionListener());
+        this.getProxy().getPluginManager().registerListener(this, new BungeeConnectionListener());
     }
 }

@@ -1,40 +1,36 @@
-package me.hyfe.queue.listeners;
+package me.hyfe.queue;
 
-import me.hyfe.queue.BungeeQueueManager;
 import me.hyfe.queue.bootstrap.Bootstrap;
+import me.hyfe.queue.proxy.ConnectionListener;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
-public class ConnectionListener implements Listener {
-    private final BungeeQueueManager queueManager = Bootstrap.get().getQueueManager();
+public class BungeeConnectionListener extends ConnectionListener<BungeeQueueManager, ProxiedPlayer, Server, ServerInfo> implements Listener {
+
+    public BungeeConnectionListener() {
+        super(Bootstrap.get().getQueueManager());
+    }
 
     @EventHandler
     public void onServerConnect(ServerConnectEvent event) {
         ProxiedPlayer player = event.getPlayer();
         ServerInfo target = event.getTarget();
+        Server playerServer = player.getServer();
         UUID uuid = player.getUniqueId();
-        CompletableFuture.runAsync(() -> {
-            boolean isInQueue = this.queueManager.isInQueue(uuid).join();
-            if (isInQueue) {
-                return;
-            }
-            this.queueManager.queue(player, uuid, target.getSocketAddress().toString(), target).join();
-        }).exceptionally((ex) -> {
-            ex.printStackTrace();
-            return null;
-        });
+        String name = target.getName();
+        this.callConnect(player, uuid, playerServer, () -> playerServer.getInfo().getName(), target, name, () -> event.setCancelled(true));
     }
 
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
         ProxiedPlayer player = event.getPlayer();
-
+        this.callDisconnect(player, player.getUniqueId());
     }
 }

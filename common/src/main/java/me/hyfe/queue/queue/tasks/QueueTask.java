@@ -1,8 +1,11 @@
-package me.hyfe.queue.queue;
+package me.hyfe.queue.queue.tasks;
 
-import me.hyfe.queue.config.holders.ConfigKeys;
+import me.hyfe.queue.config.keys.ConfigKeys;
+import me.hyfe.queue.config.keys.LangKeys;
 import me.hyfe.queue.proxy.QueueProxyPlayer;
 import me.hyfe.queue.proxy.ServerSender;
+import me.hyfe.queue.queue.Queue;
+import me.hyfe.queue.queue.QueueManager;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -10,13 +13,15 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class QueueTask<T, U> implements Runnable {
+    private final QueueManager<T, U> queueManager;
     private final Queue<T, U> queue;
     private final ServerSender<T, ?> serverSender;
     private final ScheduledFuture<?> task;
 
     private static final ScheduledExecutorService SCHEDULER = Executors.newSingleThreadScheduledExecutor();
 
-    public QueueTask(Queue<T, U> queue) {
+    public QueueTask(QueueManager<T, U> queueManager, Queue<T, U> queue) {
+        this.queueManager = queueManager;
         this.queue = queue;
         this.serverSender = queue.getServerSender();
         this.task = SCHEDULER.scheduleAtFixedRate(this, ConfigKeys.POLL_INTERVAL.get(), ConfigKeys.POLL_INTERVAL.get(), TimeUnit.MILLISECONDS);
@@ -32,7 +37,12 @@ public class QueueTask<T, U> implements Runnable {
             return;
         }
         T player = proxyPlayer.getPlayer();
+        this.queueManager.callTransit(player, false);
+        LangKeys.SENDING_SERVER.send(player, this.queueManager.getMessageDelegate(), replacer -> replacer
+                .set("server", this.queue.getServer())
+        );
         this.serverSender.accept(player);
+        this.queueManager.callTransit(player, true);
     }
 
     public void terminate() {

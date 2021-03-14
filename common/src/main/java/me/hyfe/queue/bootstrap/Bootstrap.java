@@ -1,8 +1,9 @@
 package me.hyfe.queue.bootstrap;
 
 import me.hyfe.queue.config.ConfigController;
-import me.hyfe.queue.config.holders.ConfigKeys;
-import me.hyfe.queue.config.holders.RedisKeys;
+import me.hyfe.queue.config.keys.ConfigKeys;
+import me.hyfe.queue.config.keys.LangKeys;
+import me.hyfe.queue.config.keys.RedisKeys;
 import me.hyfe.queue.queue.QueueManager;
 import me.hyfe.queue.redis.Credentials;
 import me.hyfe.queue.redis.Redis;
@@ -21,7 +22,8 @@ public class Bootstrap implements RedisProvider {
         this.configController = new ConfigController();
         this.configController.registerConfigs(
                 new RedisKeys(),
-                new ConfigKeys()
+                new ConfigKeys(),
+                new LangKeys()
         );
         this.redis = Redis.createInstance(Credentials.fromRedisKeys());
         this.queueManager = parent.createQueueManager();

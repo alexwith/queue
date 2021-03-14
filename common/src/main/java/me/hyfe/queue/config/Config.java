@@ -1,8 +1,5 @@
 package me.hyfe.queue.config;
 
-import me.hyfe.helper.Schedulers;
-import me.hyfe.helper.promise.Promise;
-import me.hyfe.helper.promise.ThreadContext;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -14,6 +11,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -69,14 +67,14 @@ public class Config {
         return this.map.get(key);
     }
 
-    public Promise<Void> reload() {
-        return Schedulers.async().run(() -> {
+    public CompletableFuture<Void> reload() {
+        return CompletableFuture.runAsync(() -> {
             try {
                 this.load();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        }).exceptionally(ThreadContext.ASYNC, (ex) -> {
+        }).exceptionally((ex) -> {
             ex.printStackTrace();
             return null;
         });

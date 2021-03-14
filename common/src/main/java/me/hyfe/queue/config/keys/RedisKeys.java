@@ -1,9 +1,9 @@
-package me.hyfe.queue.config.holders;
+package me.hyfe.queue.config.keys;
 
 
 import me.hyfe.queue.config.Config;
 import me.hyfe.queue.config.KeysHolder;
-import me.hyfe.queue.config.keys.ConfigKey;
+import me.hyfe.queue.config.typekeys.ConfigKey;
 
 public class RedisKeys extends KeysHolder {
 

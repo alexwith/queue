@@ -9,11 +9,12 @@ public class BungeeQueueManager extends QueueManager<ProxiedPlayer, ServerInfo> 
     private final QueuePlugin plugin;
 
     public BungeeQueueManager(QueuePlugin plugin) {
+        super(plugin);
         this.plugin = plugin;
     }
 
     @Override
-    public Queue<ProxiedPlayer, ServerInfo> createQueue(String key, ServerInfo target) {
-        return new Queue<>(this.plugin.bootstrap(), key, this.plugin.getProxyDelegate(), new BungeeServerSender(target));
+    public Queue<ProxiedPlayer, ServerInfo> createQueue(String key, String server, ServerInfo target) {
+        return new Queue<>(this.plugin.bootstrap(), key, server, this.plugin.getProxyDelegate(), new BungeeServerSender(target));
     }
 }

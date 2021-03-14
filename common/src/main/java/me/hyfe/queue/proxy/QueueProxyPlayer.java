@@ -1,6 +1,6 @@
 package me.hyfe.queue.proxy;
 
-import me.hyfe.helper.uuid.FastUUID;
+import me.hyfe.queue.uuid.FastUUID;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;

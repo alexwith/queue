@@ -1,4 +1,4 @@
-package me.hyfe.queue.config.keys;
+package me.hyfe.queue.config.typekeys;
 
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.config.Config;

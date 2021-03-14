@@ -1,6 +1,6 @@
 package me.hyfe.queue.redis;
 
-import me.hyfe.queue.config.holders.RedisKeys;
+import me.hyfe.queue.config.keys.RedisKeys;
 
 public class Credentials {
     private final String address;

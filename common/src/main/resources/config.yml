@@ -1,1 +1,5 @@
 poll-interval: 5000 # milliseconds
+position-interval: 1000 # milliseconds
+
+hubs:
+  - "hub"

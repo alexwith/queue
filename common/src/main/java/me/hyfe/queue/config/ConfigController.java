@@ -1,10 +1,8 @@
 package me.hyfe.queue.config;
 
-import me.hyfe.helper.Schedulers;
-import me.hyfe.helper.promise.Promise;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class ConfigController {
     private final Map<Class<? extends KeysHolder>, KeysHolder> keysHolders = new HashMap<>();
@@ -19,12 +17,12 @@ public class ConfigController {
         return (T) this.keysHolders.get(keysHolder);
     }
 
-    public Promise<Void> reload(String name) {
+    public CompletableFuture<Void> reload(String name) {
         return this.configs.get(name).reload();
     }
 
-    public Promise<Void> reloadAll() {
-        return Schedulers.async().run(() -> {
+    public CompletableFuture<Void> reloadAll() {
+        return CompletableFuture.runAsync(() -> {
             for (Config config : this.configs.values()) {
                 config.reload().join();
             }

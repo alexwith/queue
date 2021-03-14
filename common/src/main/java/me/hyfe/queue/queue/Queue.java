@@ -6,13 +6,19 @@ import me.hyfe.queue.proxy.ServerSender;
 import me.hyfe.queue.redis.RedisProvider;
 
 public class Queue<T, U> extends RedisQueue<QueueProxyPlayer<?>> {
+    private final String server;
     private final ProxyDelegate<T> proxyDelegate;
     private final ServerSender<T, U> serverSender;
 
-    public Queue(RedisProvider redisProvider, String key, ProxyDelegate<T> proxyDelegate, ServerSender<T, U> serverSender) {
+    public Queue(RedisProvider redisProvider, String key, String server, ProxyDelegate<T> proxyDelegate, ServerSender<T, U> serverSender) {
         super(redisProvider, key);
+        this.server = server;
         this.proxyDelegate = proxyDelegate;
         this.serverSender = serverSender;
+    }
+
+    public String getServer() {
+        return this.server;
     }
 
     public ServerSender<T, U> getServerSender() {

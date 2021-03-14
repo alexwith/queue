@@ -28,6 +28,10 @@ public abstract class RedisQueue<V extends Comparable<V>> {
         }
     }
 
+    public void dequeue(V value) {
+        this.jedis.lrem(this.key, 0, this.encode(value));
+    }
+
     public void clear() {
         this.jedis.del(this.key);
     }
