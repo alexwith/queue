@@ -2,6 +2,7 @@ package me.hyfe.queue;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
@@ -15,19 +16,29 @@ import me.hyfe.queue.queue.QueueManager;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@Plugin(id = "queue", name = "Queue", version = "1.0.0", authors = {"hyfe"})
+import java.util.logging.Logger;
+
+@Plugin(id = "queue", name = "Queue", version = "1.0.0", description = "Queue plugin", authors = {"hyfe"})
 public class QueuePlugin implements BootstrapProvider<Player, RegisteredServer> {
-    private final Bootstrap bootstrap;
+
+    private Bootstrap bootstrap;
+
     private final ProxyServer proxy;
+    private final Logger logger;
 
     private final ProxyDelegate<Player> proxyDelegate;
     private final ProxyMessageDelegate<Player> messageDelegate = (player, message) -> player.sendMessage(TextComponent.of(message));
 
     @Inject
-    public QueuePlugin(ProxyServer proxy) {
+    public QueuePlugin(ProxyServer proxy, Logger logger) {
         this.proxy = proxy;
-        this.bootstrap = Bootstrap.create(this);
+        this.logger = logger;
         this.proxyDelegate = (uuid) -> proxy.getPlayer(uuid).orElse(null);
+    }
+
+    @Subscribe
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+        this.bootstrap = Bootstrap.create(this);
     }
 
     @Subscribe
@@ -61,6 +72,6 @@ public class QueuePlugin implements BootstrapProvider<Player, RegisteredServer> 
 
     @Override
     public void registerListeners() {
-        new VelocityConnectionListener();
+        proxy.getEventManager().register(this, new VelocityConnectionListener());
     }
 }

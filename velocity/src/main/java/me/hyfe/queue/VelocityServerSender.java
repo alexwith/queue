@@ -13,5 +13,6 @@ public class VelocityServerSender extends ServerSender<Player, RegisteredServer>
     @Override
     public void accept(Player player) {
         player.createConnectionRequest(this.target).fireAndForget();
+        System.out.println("Sending player...");
     }
 }

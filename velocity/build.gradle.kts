@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation(project(":common"))
     compileOnly("com.velocitypowered:velocity-api:1.1.4")
+    annotationProcessor("com.velocitypowered:velocity-api:1.1.4")
 }
 
 tasks.processResources {
