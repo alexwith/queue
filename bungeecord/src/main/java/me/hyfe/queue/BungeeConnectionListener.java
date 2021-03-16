@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public class BungeeConnectionListener extends ConnectionListener<BungeeQueueManager, ProxiedPlayer, Server, ServerInfo> implements Listener {
 
+    @EventHandler
     public void onServerConnect(ServerConnectEvent event) {
         ProxiedPlayer player = event.getPlayer();
         ServerInfo target = event.getTarget();

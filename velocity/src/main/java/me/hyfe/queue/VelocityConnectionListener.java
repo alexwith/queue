@@ -15,18 +15,13 @@ public class VelocityConnectionListener extends ConnectionListener<VelocityQueue
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event) {
         Player player = event.getPlayer();
-        RegisteredServer target = event.getResult().getServer().get();
+        RegisteredServer target = event.getResult().getServer().orElse(null);
         ServerConnection originalConnection = player.getCurrentServer().orElse(null);
-        if (originalConnection == null) {
+        if (originalConnection == null || target == null) {
             return;
         }
         RegisteredServer original = originalConnection.getServer();
         UUID uuid = player.getUniqueId();
-
-        System.out.println(target);
-        System.out.println(original);
-        System.out.println(uuid);
-
         this.callConnect(player, uuid, original, () -> original.getServerInfo().getName(), target, target.getServerInfo().getName(), () -> {
             event.setResult(ServerPreConnectEvent.ServerResult.denied());
         }, player::hasPermission);

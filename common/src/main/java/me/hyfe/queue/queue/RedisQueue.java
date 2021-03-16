@@ -24,7 +24,7 @@ public abstract class RedisQueue<V extends Comparable<V>> {
             V pivot = this.get(index);
             this.jedis.linsert(this.key, ListPosition.BEFORE, this.encode(pivot), this.encode(value));
         } else {
-            this.jedis.lpush(this.key, this.encode(value));
+            this.jedis.rpush(this.key, this.encode(value));
         }
     }
 
@@ -90,7 +90,7 @@ public abstract class RedisQueue<V extends Comparable<V>> {
             if (result == null) {
                 return -1;
             }
-            int comparableResult = value.compareTo(result);
+            int comparableResult = result.compareTo(value);
             if (comparableResult == 0) {
                 return index;
             } else if (comparableResult < 0) {

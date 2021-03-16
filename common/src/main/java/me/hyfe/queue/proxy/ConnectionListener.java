@@ -22,8 +22,6 @@ public class ConnectionListener<QM extends QueueManager<P, T>, P, S, T> {
     }
 
     public void callConnect(P player, UUID uuid, S original, Supplier<String> originalName, T target, String targetName, Runnable cancel, Predicate<String> canBypass) {
-        System.out.println(this.queueManager.isIntTransit(player));
-
         if (original == null || ConfigKeys.HUBS.get().contains(targetName) || this.queueManager.isIntTransit(player)) {
             return;
         }
