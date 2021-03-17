@@ -3,6 +3,7 @@ package me.hyfe.queue.redis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class Redis {
     private final JedisPool pool;
@@ -11,6 +12,8 @@ public class Redis {
         this.pool = this.createPool(credentials);
         try (Jedis jedis = this.pool.getResource()) {
             jedis.ping();
+        } catch (JedisConnectionException ex) {
+            ex.printStackTrace();
         }
     }
 
