@@ -1,2 +1,16 @@
 title: "Server Selector"
 rows: 3
+
+servers:
+  game-server:
+    item:
+      type: diamond_sword
+      name: "&aGame Server"
+      lore:
+        - "&7Your mom"
+    slot: 5
+
+filler-mask:
+  - "111111111"
+  - "111111111"
+  - "111111111"

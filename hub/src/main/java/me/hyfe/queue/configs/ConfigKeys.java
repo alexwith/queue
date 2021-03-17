@@ -6,6 +6,6 @@ import me.hyfe.helper.config.KeysHolder;
 public class ConfigKeys extends KeysHolder {
 
     public ConfigKeys() {
-        super(Config.create("config.yml", "hub", (path) -> path));
+        super(Config.create("config.yml", (path) -> path));
     }
 }

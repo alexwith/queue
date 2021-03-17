@@ -7,7 +7,7 @@ import me.hyfe.helper.config.keys.ConfigKey;
 public class SelectorMenuKeys extends KeysHolder {
 
     public SelectorMenuKeys() {
-        super(Config.create("selector-menu.yml", "hub", (path) -> path));
+        super(Config.create("selector-menu.yml", (path) -> path));
     }
 
     public static ConfigKey<String> TITLE = ConfigKey.of(SelectorMenuKeys.class, "title");
