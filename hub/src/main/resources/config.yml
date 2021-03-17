@@ -1,1 +1,2 @@
-test: ""
+servers:
+  game-server:

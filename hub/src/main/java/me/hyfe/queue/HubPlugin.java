@@ -53,7 +53,7 @@ public class HubPlugin extends HelperPlugin {
                     if (itemStack == null || !itemStack.getType().equals(Material.COMPASS)) {
                         return;
                     }
-                    SelectorMenu selectorMenu = new SelectorMenu(player);
+                    SelectorMenu selectorMenu = new SelectorMenu(this, player);
                     selectorMenu.open();
                 });
     }

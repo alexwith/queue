@@ -3,6 +3,7 @@ package me.hyfe.queue.configs;
 import me.hyfe.helper.config.Config;
 import me.hyfe.helper.config.KeysHolder;
 import me.hyfe.helper.config.keys.ConfigKey;
+import me.hyfe.helper.menu.config.GuiItemsKey;
 
 public class SelectorMenuKeys extends KeysHolder {
 
@@ -12,4 +13,5 @@ public class SelectorMenuKeys extends KeysHolder {
 
     public static ConfigKey<String> TITLE = ConfigKey.of(SelectorMenuKeys.class, "title");
     public static ConfigKey<Integer> ROWS = ConfigKey.of(SelectorMenuKeys.class, "rows");
+    public static GuiItemsKey SERVERS = GuiItemsKey.ofKey(SelectorMenuKeys.class, "servers");
 }

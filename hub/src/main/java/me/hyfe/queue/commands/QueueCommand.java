@@ -19,7 +19,7 @@ public class QueueCommand {
                         this.serverSub()
                 )
                 .handler((sender, context) -> {
-
+                    context.sendUsage(sender);
                 }).register();
     }
 

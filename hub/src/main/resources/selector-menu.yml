@@ -7,8 +7,8 @@ servers:
       type: diamond_sword
       name: "&aGame Server"
       lore:
-        - "&7Your mom"
-    slot: 5
+        - "&7Some lore"
+    slot: 13
 
 filler-mask:
   - "111111111"
