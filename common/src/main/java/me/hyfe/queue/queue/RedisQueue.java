@@ -1,15 +1,15 @@
 package me.hyfe.queue.queue;
 
+import me.hyfe.queue.redis.Redis;
 import me.hyfe.queue.redis.RedisProvider;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ListPosition;
 
 public abstract class RedisQueue<V extends Comparable<V>> {
-    private final Jedis jedis;
+    private final Redis redis;
     private final String key;
 
     public RedisQueue(RedisProvider redisProvider, String key) {
-        this.jedis = redisProvider.getRedis().getJedis();
+        this.redis = redisProvider.getRedis();
         this.key = key;
     }
 
@@ -18,22 +18,28 @@ public abstract class RedisQueue<V extends Comparable<V>> {
     public abstract V decode(String string);
 
     public void queue(V value) {
-        long search = this.binarySearch(value);
-        long index = search < 0 ? -(search + 1) : search + 1;
-        if (index < this.length()) {
-            V pivot = this.get(index);
-            this.jedis.linsert(this.key, ListPosition.BEFORE, this.encode(pivot), this.encode(value));
-        } else {
-            this.jedis.rpush(this.key, this.encode(value));
-        }
+        this.redis.provideJedis((jedis) -> {
+            long search = this.binarySearch(value);
+            long index = search < 0 ? -(search + 1) : search + 1;
+            if (index < this.length()) {
+                V pivot = this.get(index);
+                jedis.linsert(this.key, ListPosition.BEFORE, this.encode(pivot), this.encode(value));
+            } else {
+                jedis.rpush(this.key, this.encode(value));
+            }
+        });
     }
 
     public void dequeue(V value) {
-        this.jedis.lrem(this.key, 0, this.encode(value));
+        this.redis.provideJedis((jedis) -> {
+            jedis.lrem(this.key, 0, this.encode(value));
+        });
     }
 
     public void clear() {
-        this.jedis.del(this.key);
+        this.redis.provideJedis((jedis) -> {
+            jedis.del(this.key);
+        });
     }
 
     public V peek() {
@@ -41,23 +47,33 @@ public abstract class RedisQueue<V extends Comparable<V>> {
     }
 
     public V poll() {
-        return this.decode(this.jedis.lpop(this.key));
+        String value = this.redis.provideJedis((jedis) -> {
+            return jedis.lpop(this.key);
+        });
+        return this.decode(value);
     }
 
     public V get(long index) {
-        return this.decode(this.jedis.lindex(this.key, index));
+        String value = this.redis.provideJedis((jedis) -> {
+            return jedis.lindex(this.key, index);
+        });
+        return this.decode(value);
     }
 
     public void set(long index, V value) {
-        if (index > this.length() - 1) {
-            this.jedis.lpush(this.key, this.encode(value));
-        } else {
-            this.jedis.lset(this.key, index, this.encode(value));
-        }
+        this.redis.provideJedis((jedis) -> {
+            if (index > this.length() - 1) {
+                jedis.lpush(this.key, this.encode(value));
+            } else {
+                jedis.lset(this.key, index, this.encode(value));
+            }
+        });
     }
 
     public void remove(V value) {
-        this.jedis.lrem(this.key, 0, this.encode(value));
+        this.redis.provideJedis((jedis) -> {
+            jedis.lrem(this.key, 0, this.encode(value));
+        });
     }
 
     public int indexOf(V value) {
@@ -73,7 +89,9 @@ public abstract class RedisQueue<V extends Comparable<V>> {
     }
 
     public long length() {
-        return this.jedis.llen(this.key);
+        return this.redis.provideJedis((jedis) -> {
+            return jedis.llen(this.key);
+        });
     }
 
     /**

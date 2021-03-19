@@ -5,6 +5,9 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 public class Redis {
     private final JedisPool pool;
 
@@ -25,8 +28,16 @@ public class Redis {
         return this.pool;
     }
 
-    public Jedis getJedis() {
-        return this.pool.getResource();
+    public void provideJedis(Consumer<Jedis> consumer) {
+        try (Jedis jedis = this.pool.getResource()) {
+            consumer.accept(jedis);
+        }
+    }
+
+    public <T> T provideJedis(Function<Jedis, T> function) {
+        try (Jedis jedis = this.pool.getResource()) {
+            return function.apply(jedis);
+        }
     }
 
     public void close() {
