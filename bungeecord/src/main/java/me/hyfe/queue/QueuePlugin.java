@@ -2,9 +2,11 @@ package me.hyfe.queue;
 
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
+import me.hyfe.queue.priorities.PriorityManager;
 import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -36,6 +38,11 @@ public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlay
     @Override
     public @NotNull QueueManager<ProxiedPlayer, ServerInfo> createQueueManager() {
         return new BungeeQueueManager(this);
+    }
+
+    @Override
+    public @NotNull PriorityManager<ProxiedPlayer> createPriorityManager() {
+        return new PriorityManager<>(CommandSender::hasPermission);
     }
 
     @Override

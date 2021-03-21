@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,7 @@ public class Config {
     private final File file;
     private final Yaml yaml;
     private final Map<String, Object> map = new HashMap<>();
+    private final Map<String, Set<String>> sections = new HashMap<>();
 
     public Config(String name, File file) throws IOException {
         this.name = name;
@@ -65,6 +67,10 @@ public class Config {
 
     public Object get(String key) {
         return this.map.get(key);
+    }
+
+    public Set<String> getKeys(String path) {
+        return this.sections.get(path);
     }
 
     public CompletableFuture<Void> reload() {
@@ -115,6 +121,10 @@ public class Config {
         for (Map.Entry<?, ?> entry : input.entrySet()) {
             String key = parent + "." + entry.getKey().toString();
             Object value = entry.getValue();
+            if (!this.sections.containsKey(parent)) {
+                this.sections.put(parent, new HashSet<>());
+            }
+            this.sections.get(parent).add(entry.getKey().toString());
             if (value instanceof Map) {
                 Map<?, ?> section = ((Map<?, ?>) value);
                 this.writeSectionToMemory(section, key);

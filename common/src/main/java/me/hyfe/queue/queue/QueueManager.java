@@ -2,7 +2,9 @@ package me.hyfe.queue.queue;
 
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
+import me.hyfe.queue.config.ConfigController;
 import me.hyfe.queue.config.keys.LangKeys;
+import me.hyfe.queue.priorities.PriorityManager;
 import me.hyfe.queue.proxy.QueueProxyPlayer;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.queue.tasks.PositionTask;
@@ -18,17 +20,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class QueueManager<T, U> {
     private final Map<String, Queue<T, U>> map = new ConcurrentHashMap<>();
     private final Set<QueueTask<T, U>> queueTasks = new HashSet<>();
-    private final PositionTask<T, U> positionTask = new PositionTask<>(this);
     private final Set<T> inTransit = new HashSet<>();
+    private final PositionTask<T, U> positionTask = new PositionTask<>(this);
+    private final PriorityManager<T> priorityManager;
+
     private final ProxyMessageDelegate<T> messageDelegate;
 
     public QueueManager(BootstrapProvider<T, U> bootstrapProvider) {
         this.messageDelegate = bootstrapProvider.getMessageDelegate();
+        this.priorityManager = bootstrapProvider.createPriorityManager();
     }
 
     public abstract Queue<T, U> createQueue(String key, String server, U target);
 
     public abstract SocketAddress getSocketAddress(String server);
+
+    public void loadPriorities(ConfigController configController) {
+        this.priorityManager.load(configController);
+    }
 
     public boolean isOnline(String server) {
         Socket socket = new Socket();
@@ -52,7 +61,7 @@ public abstract class QueueManager<T, U> {
     public CompletableFuture<Void> sendPosition(T player, UUID uuid) {
         return CompletableFuture.runAsync(() -> {
             Queue<T, U> queue = this.getInQueue(uuid).join();
-            QueueProxyPlayer<T> proxyPlayer = QueueProxyPlayer.of(player, uuid);
+            QueueProxyPlayer<T> proxyPlayer = QueueProxyPlayer.of(player, uuid, this.priorityManager.getPriority(player));
             LangKeys.QUEUE_POSITION.send(player, this.messageDelegate, replacer -> replacer
                     .set("position", queue.indexOf(proxyPlayer) + 1)
                     .set("total", queue.length())
@@ -120,7 +129,7 @@ public abstract class QueueManager<T, U> {
             LangKeys.JOINED_QUEUE.send(player, this.messageDelegate, replacer -> replacer
                     .set("server", server)
             );
-            QueueProxyPlayer<T> proxyPlayer = QueueProxyPlayer.of(player, uuid);
+            QueueProxyPlayer<T> proxyPlayer = QueueProxyPlayer.of(player, uuid, this.priorityManager.getPriority(player));
             Queue<T, U> queue = this.map.get(key);
             queue.queue(proxyPlayer);
             this.sendPosition(player, uuid);
@@ -133,7 +142,7 @@ public abstract class QueueManager<T, U> {
             if (queue == null) {
                 return;
             }
-            QueueProxyPlayer<T> proxyPlayer = QueueProxyPlayer.of(player, uuid);
+            QueueProxyPlayer<T> proxyPlayer = QueueProxyPlayer.of(player, uuid, this.priorityManager.getPriority(player));
             queue.dequeue(proxyPlayer);
         }, Bootstrap.EXECUTOR);
     }

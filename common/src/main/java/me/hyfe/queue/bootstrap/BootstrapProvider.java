@@ -1,5 +1,6 @@
 package me.hyfe.queue.bootstrap;
 
+import me.hyfe.queue.priorities.PriorityManager;
 import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
@@ -12,6 +13,9 @@ public interface BootstrapProvider<T, U> {
 
     @NotNull
     QueueManager<T, U> createQueueManager();
+
+    @NotNull
+    PriorityManager<T> createPriorityManager();
 
     @NotNull
     ProxyDelegate<T> getProxyDelegate();

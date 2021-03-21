@@ -10,6 +10,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
+import me.hyfe.queue.priorities.PriorityManager;
 import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
 import me.hyfe.queue.queue.QueueManager;
@@ -58,6 +59,11 @@ public class QueuePlugin implements BootstrapProvider<Player, RegisteredServer> 
     @Override
     public @NotNull QueueManager<Player, RegisteredServer> createQueueManager() {
         return new VelocityQueueManager(this);
+    }
+
+    @Override
+    public @NotNull PriorityManager<Player> createPriorityManager() {
+        return new PriorityManager<>(Player::hasPermission);
     }
 
     @Override

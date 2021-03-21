@@ -17,8 +17,8 @@ public class QueueProxyPlayer<T> implements Comparable<QueueProxyPlayer<?>> {
         this.priority = priority;
     }
 
-    public static <U> QueueProxyPlayer<U> of(U player, UUID uuid) {
-        return new QueueProxyPlayer<>(player, uuid, 0);
+    public static <U> QueueProxyPlayer<U> of(U player, UUID uuid, int priority) {
+        return new QueueProxyPlayer<>(player, uuid, priority);
     }
 
     public T getPlayer() {

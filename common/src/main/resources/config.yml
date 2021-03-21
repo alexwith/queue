@@ -4,3 +4,11 @@ bypass-permission: "queue.bypass"
 
 hubs:
   - "hub"
+
+priorities:
+  VIP:
+    permission: "queue.vip"
+    priority: 100
+  MVP:
+    permission: "queue.mvp"
+    priority: 500
