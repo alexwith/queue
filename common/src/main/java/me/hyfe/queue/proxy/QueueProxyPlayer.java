@@ -41,6 +41,6 @@ public class QueueProxyPlayer<T> implements Comparable<QueueProxyPlayer<?>> {
 
     @Override
     public int compareTo(@NotNull QueueProxyPlayer<?> player) {
-        return Integer.compare(this.priority, player.priority);
+        return this.priority == player.priority ? 1 : Integer.compare(this.priority, player.priority);
     }
 }
