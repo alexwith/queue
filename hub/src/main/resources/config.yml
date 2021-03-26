@@ -1,2 +1,18 @@
+ping-interval: 10 # ticks, 1 second = 20 ticks
+
 servers:
   game-server:
+    release:
+      date: 10/04/2021 # dd/mm/yyyy
+      time: 13:00
+    ping:
+      ip: play.coolip.com
+      port: 25566
+    command: "queue game-server"
+
+compass-item:
+  type: compass
+  name: "&aServer Selector"
+  lore:
+    - "&7&o(( Click to open ))"
+  slot: 4
