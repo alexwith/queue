@@ -34,7 +34,7 @@ public class HubPlugin extends HelperPlugin {
                 new ConfigKeys(),
                 new SelectorMenuKeys()
         );
-        this.serverManager = new ServerManager();
+        this.serverManager = new ServerManager(this);
         this.pingTask = new PingTask(this.serverManager);
         this.commands();
         this.commonListeners();
