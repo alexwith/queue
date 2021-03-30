@@ -18,6 +18,10 @@ public class ServerManager {
         return this.servers;
     }
 
+    public Server getServer(String key) {
+        return this.servers.get(key);
+    }
+
     private void load(HelperPlugin plugin) {
         Config config = plugin.getConfig("config.yml");
         for (String key : config.getKeys("servers")) {

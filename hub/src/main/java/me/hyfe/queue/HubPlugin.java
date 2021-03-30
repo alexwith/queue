@@ -7,8 +7,6 @@ import me.hyfe.queue.configs.ConfigKeys;
 import me.hyfe.queue.configs.SelectorMenuKeys;
 import me.hyfe.queue.managers.ServerManager;
 import me.hyfe.queue.menu.SelectorMenu;
-import me.hyfe.queue.objects.Ping;
-import me.hyfe.queue.objects.Server;
 import me.hyfe.queue.task.PingTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -46,6 +44,10 @@ public class HubPlugin extends HelperPlugin {
         this.pingTask.close();
     }
 
+    public ServerManager getServerManager() {
+        return this.serverManager;
+    }
+
     public BiConsumer<Player, String> getServerSender() {
         return this.serverSender;
     }
@@ -72,10 +74,6 @@ public class HubPlugin extends HelperPlugin {
                     }
                     SelectorMenu selectorMenu = new SelectorMenu(this, player);
                     selectorMenu.open();
-
-                    Server server = this.serverManager.getServers().get("dl");
-                    Ping ping = server.getLatestPing();
-                    System.out.println("isOnline: " + ping.isOnline() + ", online: " + ping.getOnlinePlayers() + ", max: " + ping.getMaxPlayers());
                 });
     }
 
