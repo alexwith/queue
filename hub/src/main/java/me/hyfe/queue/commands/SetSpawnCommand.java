@@ -18,7 +18,7 @@ public class SetSpawnCommand {
                 .permission("queue.admin")
                 .handler((sender, context) -> {
                     Location location = sender.getLocation();
-                    
+                    this.plugin.setSpawnPoint(location);
                 }).register();
     }
 }
