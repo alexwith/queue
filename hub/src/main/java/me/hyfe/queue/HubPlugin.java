@@ -3,6 +3,7 @@ package me.hyfe.queue;
 import me.hyfe.helper.Events;
 import me.hyfe.helper.plugin.HelperPlugin;
 import me.hyfe.queue.commands.QueueCommand;
+import me.hyfe.queue.commands.SetSpawnCommand;
 import me.hyfe.queue.configs.ConfigKeys;
 import me.hyfe.queue.configs.SelectorMenuKeys;
 import me.hyfe.queue.managers.ServerManager;
@@ -11,6 +12,7 @@ import me.hyfe.queue.task.PingTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -54,6 +56,7 @@ public class HubPlugin extends HelperPlugin {
 
     private void commands() {
         new QueueCommand(this);
+        new SetSpawnCommand(this);
     }
 
     private void serverSelectorListeners() {
@@ -84,6 +87,14 @@ public class HubPlugin extends HelperPlugin {
                     event.setCancelled(true);
                 });
         Events.subscribe(InventoryClickEvent.class)
+                .handler((event) -> {
+                    event.setCancelled(true);
+                });
+        Events.subscribe(BlockBreakEvent.class)
+                .handler((event) -> {
+                    event.setCancelled(true);
+                });
+        Events.subscribe(PlayerInteractEvent.class)
                 .handler((event) -> {
                     event.setCancelled(true);
                 });

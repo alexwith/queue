@@ -11,6 +11,8 @@ import me.hyfe.queue.objects.Ping;
 import me.hyfe.queue.objects.Server;
 import me.hyfe.queue.utils.TimeUtil;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,13 +36,20 @@ public class SelectorMenu extends ConfigGui {
                 }
                 Ping ping = server.getLatestPing();
                 key = key + "." + (ping.isOnline() ? "online" : "offline");
-                Item.Builder builder = Item.builder(ItemStackBuilder.of(this.config, "servers." + key + ".item").build());
+                Item.Builder builder = Item.builder(ItemStackBuilder.of(this.config, "servers." + key + ".item").build())
+                        .bind(() -> {
+                            server.send(this.player);
+                        }, ClickType.RIGHT, ClickType.LEFT);
                 Item item = builder.build(replacer -> replacer
                         .set("online_players", ping.getOnlinePlayers())
                         .set("max_players", ping.getMaxPlayers())
                         .set("age", TimeUtil.format(TimeUnit.SECONDS, server.time())));
                 int slot = this.config.tryGet("servers." + key + ".slot");
                 this.setItem(item, slot);
+            }
+            ItemStack fillerItem = SelectorMenuKeys.FILLER_ITEM.get();
+            while (this.firstEmpty() != -1) {
+                this.addItem(Item.builder(fillerItem).build());
             }
         }
     }

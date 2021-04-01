@@ -22,7 +22,8 @@ servers:
           - "&7Age &c%age%"
       slot: 13
 
-filler-mask:
-  - "111111111"
-  - "111111111"
-  - "111111111"
+filler-item:
+  type: stained_glass_pane
+  name: ""
+  lore:
+    - ""

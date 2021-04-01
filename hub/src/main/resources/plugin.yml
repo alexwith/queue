@@ -1,3 +1,7 @@
 name: Hub
 main: me.hyfe.queue.HubPlugin
 version: 1.0.0
+
+permissions:
+  queue.admin:
+    description: none
