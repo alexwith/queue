@@ -18,7 +18,7 @@ public class PingTask implements Runnable, Terminable {
 
     @Override
     public void run() {
-        for (Server server : this.serverManager.getServers().values()) {
+        for (Server server : this.serverManager.getServers()) {
             server.ping();
         }
     }

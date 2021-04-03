@@ -1,0 +1,156 @@
+main-menu:
+  title: "Server Selector"
+  rows: 3
+
+filler:
+  type: stained_glass_pane
+  name: ""
+  lore:
+    - ""
+
+categories:
+  factions:
+    title: "Factions"
+    rows: 3
+    slot: 12
+    item:
+      type: diamond_sword
+      name: "&aFactions"
+      lore:
+        - "&7Factions is a gamemode"
+  skyblock:
+    title: "Skyblock"
+    rows: 3
+    slot: 14
+    item:
+      type: diamond_sword
+      name: "&aSkyblock"
+      lore:
+        - "&7Skyblock is a gamemode"
+
+servers:
+  factions1:
+    category: factions
+    ping:
+      ip: play.example.com
+      port: 25566
+    release:
+      date: "10/03/2021" # dd/mm/yyyy
+      time: "13:00"
+      time-zone: "Europe/Oslo"
+    send-command: "queue factions1"
+    slot: 12
+    online-item:
+      type: diamond_sword
+      name: "&aFactions1"
+      lore:
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
+    offline-item:
+      type: diamond_sword
+      name: "&cFactions1"
+      lore:
+        - "&cOffline"
+        - ""
+        - "&7Age &c%age%"
+  factions2:
+    category: factions
+    ping:
+      ip: play.example.com
+      port: 25566
+    release:
+      date: "10/03/2021" # dd/mm/yyyy
+      time: "13:00"
+      time-zone: "Europe/Oslo"
+    send-command: "queue game-server"
+    slot: 14
+    online-item:
+      type: diamond_sword
+      name: "&aFactions2"
+      lore:
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
+    offline-item:
+      type: diamond_sword
+      name: "&cFactions2"
+      lore:
+        - "&cOffline"
+        - ""
+        - "&7Age &c%age%"
+  skyblock1:
+    category: skyblock
+    ping:
+      ip: play.example.com
+      port: 25566
+    release:
+      date: "10/03/2021" # dd/mm/yyyy
+      time: "13:00"
+      time-zone: "Europe/Oslo"
+    send-command: "queue skyblock1"
+    slot: 12
+    online-item:
+      type: diamond_sword
+      name: "&aSkyblock1"
+      lore:
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
+    offline-item:
+      type: diamond_sword
+      name: "&cSkyblock1"
+      lore:
+        - "&cOffline"
+        - ""
+        - "&7Age &c%age%"
+  skyblock2:
+    category: skyblock
+    ping:
+      ip: play.example.com
+      port: 25566
+    release:
+      date: "10/03/2021" # dd/mm/yyyy
+      time: "13:00"
+      time-zone: "Europe/Oslo"
+    send-command: "queue skyblock2"
+    slot: 14
+    online-item:
+      type: diamond_sword
+      name: "&aSkyblock2"
+      lore:
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
+    offline-item:
+      type: diamond_sword
+      name: "&cSkyblock2"
+      lore:
+        - "&cOffline"
+        - ""
+        - "&7Age &c%age%"
+  survival:
+    category: none
+    ping:
+      ip: play.example.com
+      port: 25566
+    release:
+      date: "10/03/2021" # dd/mm/yyyy
+      time: "13:00"
+      time-zone: "Europe/Oslo"
+    send-command: "queue survival"
+    slot: 22
+    online-item:
+      type: diamond_sword
+      name: "&aSurvival"
+      lore:
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
+    offline-item:
+      type: diamond_sword
+      name: "&cSurvival"
+      lore:
+        - "&cOffline"
+        - ""
+        - "&7Age &c%age%"

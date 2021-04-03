@@ -1,16 +1,5 @@
 ping-interval: 10 # ticks, 1 second = 20 ticks
 
-servers:
-  game-server:
-    ping:
-      ip: play.example.com
-      port: 25566
-    release:
-      date: "10/03/2021" # dd/mm/yyyy
-      time: "13:00"
-      time-zone: "Europe/Oslo"
-    send-command: "queue game-server"
-
 compass-item:
   type: compass
   name: "&aServer Selector"
