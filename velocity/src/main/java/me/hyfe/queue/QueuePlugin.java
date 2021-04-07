@@ -1,6 +1,7 @@
 package me.hyfe.queue;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -10,6 +11,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
+import me.hyfe.queue.commands.JoinQueueCommand;
+import me.hyfe.queue.commands.QueueAdminCommand;
 import me.hyfe.queue.priorities.PriorityManager;
 import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
@@ -35,6 +38,7 @@ public class QueuePlugin implements BootstrapProvider<Player, RegisteredServer> 
         this.proxy = proxy;
         this.logger = logger;
         this.proxyDelegate = (uuid) -> proxy.getPlayer(uuid).orElse(null);
+        this.registerCommands();
     }
 
     @Subscribe
@@ -79,5 +83,11 @@ public class QueuePlugin implements BootstrapProvider<Player, RegisteredServer> 
     @Override
     public void registerListeners() {
         proxy.getEventManager().register(this, new VelocityConnectionListener());
+    }
+
+    private void registerCommands() {
+        CommandManager manager = this.proxy.getCommandManager();
+        manager.register(manager.metaBuilder("joinqueue").aliases("queuejoin, queue").build(), new JoinQueueCommand(this));
+        manager.register(manager.metaBuilder("queueadmin").build(), new QueueAdminCommand(this));
     }
 }

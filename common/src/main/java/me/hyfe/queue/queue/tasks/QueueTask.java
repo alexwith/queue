@@ -26,7 +26,7 @@ public class QueueTask<T, U> implements Runnable {
 
     @Override
     public void run() {
-        if (this.queue.length() == 0) {
+        if (this.queue.length() == 0 || this.queue.isPaused()) {
             return;
         }
         if (!this.queueManager.isOnline(this.queue.getServer())) {

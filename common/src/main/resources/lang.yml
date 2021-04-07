@@ -6,3 +6,8 @@ server-whitelisted: "&a&lQUEUE &8> &a%server%&7 is currently whitelisted, please
 already-queued: "&a&lQUEUE &8> &7You are already in the queue to join &a%server%&7."
 bypassing-queue: "&a&lQUEUE &8> &7Bypassing queue..."
 already-on-server: "&a&lQUEUE &8> &7You are already on &a%server%&7."
+joinqueue-usage: "&a&lQUEUE &8> &7/joinqueue <queue>"
+queue-not-found: "&a&lQUEUE &8> &cCould not a find a queue with that name."
+queue-paused: "&a&lQUEUE &8> &7You paused the queue."
+queue-resumed: "&a&lQUEUE &8> &7You resumed the queue."
+queue-cleared: "&a&lQUEUE &8> &7You cleared the queue."

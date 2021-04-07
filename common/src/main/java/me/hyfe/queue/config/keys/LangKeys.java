@@ -18,4 +18,9 @@ public class LangKeys extends KeysHolder {
     public static final LangKey ALREADY_QUEUED = LangKey.ofKey(LangKeys.class, "already-queued");
     public static final LangKey BYPASSING_QUEUE = LangKey.ofKey(LangKeys.class, "bypassing-queue");
     public static final LangKey ALREADY_ON_SERVER = LangKey.ofKey(LangKeys.class, "already-on-server");
+    public static final LangKey JOIN_QUEUE_USAGE = LangKey.ofKey(LangKeys.class, "joinqueue-usage");
+    public static final LangKey QUEUE_NOT_FOUND = LangKey.ofKey(LangKeys.class, "queue-not-found");
+    public static final LangKey QUEUE_PAUSED = LangKey.ofKey(LangKeys.class, "queue-paused");
+    public static final LangKey QUEUE_RESUMED = LangKey.ofKey(LangKeys.class, "queue-resumed");
+    public static final LangKey QUEUE_CLEARED = LangKey.ofKey(LangKeys.class, "queue-cleared");
 }

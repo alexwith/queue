@@ -100,9 +100,7 @@ public abstract class QueueManager<T, U> {
     }
 
     public CompletableFuture<Boolean> isInQueue(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            return this.getInQueue(uuid).join() != null;
-        }, Bootstrap.EXECUTOR);
+        return CompletableFuture.supplyAsync(() -> this.getInQueue(uuid).join() != null, Bootstrap.EXECUTOR);
     }
 
     public CompletableFuture<Queue<T, U>> getInQueue(UUID uuid) {

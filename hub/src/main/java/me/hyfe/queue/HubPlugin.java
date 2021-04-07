@@ -3,13 +3,12 @@ package me.hyfe.queue;
 import me.hyfe.helper.Events;
 import me.hyfe.helper.config.Config;
 import me.hyfe.helper.plugin.HelperPlugin;
-import me.hyfe.queue.commands.QueueCommand;
 import me.hyfe.queue.configs.ConfigKeys;
 import me.hyfe.queue.managers.ServerManager;
 import me.hyfe.queue.task.PingTask;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -17,13 +16,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.function.BiConsumer;
-
 public class HubPlugin extends HelperPlugin {
     private ServerManager serverManager;
     private PingTask pingTask;
-
-    private final BiConsumer<Player, String> serverSender = (player, server) -> Bukkit.dispatchCommand(player, "server ".concat(server));
 
     @Override
     protected void enable() {
@@ -35,7 +30,6 @@ public class HubPlugin extends HelperPlugin {
         );
         this.serverManager = new ServerManager(this);
         this.pingTask = new PingTask(this.serverManager);
-        this.commands();
         this.commonListeners();
         this.serverSelectorListeners();
     }
@@ -47,14 +41,6 @@ public class HubPlugin extends HelperPlugin {
 
     public ServerManager getServerManager() {
         return this.serverManager;
-    }
-
-    public BiConsumer<Player, String> getServerSender() {
-        return this.serverSender;
-    }
-
-    private void commands() {
-        new QueueCommand(this);
     }
 
     private void serverSelectorListeners() {
@@ -94,6 +80,14 @@ public class HubPlugin extends HelperPlugin {
         Events.subscribe(PlayerInteractEvent.class)
                 .handler((event) -> {
                     event.setCancelled(true);
+                });
+        Events.subscribe(FoodLevelChangeEvent.class)
+                .handler((event) -> {
+                    if (event.getFoodLevel() < 20) {
+                        event.setFoodLevel(20);
+                    } else {
+                        event.setCancelled(true);
+                    }
                 });
     }
 }

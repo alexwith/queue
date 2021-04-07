@@ -2,6 +2,8 @@ package me.hyfe.queue;
 
 import me.hyfe.queue.bootstrap.Bootstrap;
 import me.hyfe.queue.bootstrap.BootstrapProvider;
+import me.hyfe.queue.commands.JoinQueueCommand;
+import me.hyfe.queue.commands.QueueAdminCommand;
 import me.hyfe.queue.priorities.PriorityManager;
 import me.hyfe.queue.proxy.delegates.ProxyDelegate;
 import me.hyfe.queue.proxy.delegates.ProxyMessageDelegate;
@@ -23,6 +25,7 @@ public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlay
     @Override
     public void onEnable() {
         this.bootstrap = Bootstrap.create(this);
+        this.registerCommands();
     }
 
     @Override
@@ -58,5 +61,10 @@ public class QueuePlugin extends Plugin implements BootstrapProvider<ProxiedPlay
     @Override
     public void registerListeners() {
         this.getProxy().getPluginManager().registerListener(this, new BungeeConnectionListener());
+    }
+
+    private void registerCommands() {
+        this.getProxy().getPluginManager().registerCommand(this, new JoinQueueCommand(this));
+        this.getProxy().getPluginManager().registerCommand(this, new QueueAdminCommand(this));
     }
 }
