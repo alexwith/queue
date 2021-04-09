@@ -6,6 +6,7 @@ import me.hyfe.helper.plugin.HelperPlugin;
 import me.hyfe.queue.configs.ConfigKeys;
 import me.hyfe.queue.managers.ServerManager;
 import me.hyfe.queue.task.PingTask;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -32,6 +33,7 @@ public class HubPlugin extends HelperPlugin {
         this.pingTask = new PingTask(this.serverManager);
         this.commonListeners();
         this.serverSelectorListeners();
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     @Override

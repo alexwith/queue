@@ -38,7 +38,6 @@ servers:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
       time-zone: "Europe/Oslo"
-    send-command: "queue factions1"
     slot: 12
     online-item:
       type: diamond_sword
@@ -63,7 +62,6 @@ servers:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
       time-zone: "Europe/Oslo"
-    send-command: "queue game-server"
     slot: 14
     online-item:
       type: diamond_sword
@@ -88,7 +86,6 @@ servers:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
       time-zone: "Europe/Oslo"
-    send-command: "queue skyblock1"
     slot: 12
     online-item:
       type: diamond_sword
@@ -113,7 +110,6 @@ servers:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
       time-zone: "Europe/Oslo"
-    send-command: "queue skyblock2"
     slot: 14
     online-item:
       type: diamond_sword
@@ -138,7 +134,6 @@ servers:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
       time-zone: "Europe/Oslo"
-    send-command: "queue survival"
     slot: 22
     online-item:
       type: diamond_sword

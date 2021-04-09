@@ -47,7 +47,7 @@ public class ServerManager {
 
     public ServerSelectorMenu createServerSelectorMenu(Player player) {
         Config config = this.plugin.getConfig("servers.yml");
-        return new ServerSelectorMenu(player, config.tryGet("main-menu.title"), config.tryGet("main-menu.rows"), this);
+        return new ServerSelectorMenu(player, config.tryGet("main-menu.title"), config.tryGet("main-menu.rows"), this.plugin, this);
     }
 
     public void applyFiller(Gui gui) {
@@ -84,11 +84,10 @@ public class ServerManager {
             String releaseDate = config.tryGet(path.apply("release.date"));
             String releaseTime = config.tryGet(path.apply("release.time"));
             String releaseTimeZone = config.tryGet(path.apply("release.time-zone"));
-            String sendCommand = config.tryGet(path.apply("send-command"));
             int slot = config.tryGet(path.apply("slot"));
             ItemStack onlineItem = ItemStackBuilder.of(config, path.apply("online-item")).build();
             ItemStack offlineItem = ItemStackBuilder.of(config, path.apply("offline-item")).build();
-            Server server = new Server(key, category, releaseTimeZone, releaseDate, releaseTime, ip, port, sendCommand, slot, onlineItem, offlineItem);
+            Server server = new Server(key, category, releaseTimeZone, releaseDate, releaseTime, ip, port, slot, onlineItem, offlineItem);
             this.servers.put(key, server);
             if (!this.categoryRelations.containsKey(category)) {
                 this.categoryRelations.put(category, new HashSet<>());
