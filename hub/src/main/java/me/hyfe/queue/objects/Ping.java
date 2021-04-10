@@ -2,6 +2,7 @@ package me.hyfe.queue.objects;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import me.hyfe.queue.redis.Redis;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -17,6 +18,7 @@ public class Ping {
     private final int maxPlayers;
     private final boolean online;
 
+    private static final JsonParser PARSER = new JsonParser();
     private static final BiFunction<String, Integer, URL> API_ROUTE = (ip, port) -> {
         try {
             return new URL(String.format("https://api.minetools.eu/ping/%s/%d", ip, port));
@@ -44,21 +46,18 @@ public class Ping {
         return this.online;
     }
 
-    // Thank you ServerSelectorX (modified), taken under license GNU General Public License v3.0
-    public static Ping generate(String ip, int port) throws IOException {
-        HttpsURLConnection connection = (HttpsURLConnection) API_ROUTE.apply(ip, port).openConnection();
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-        InputStreamReader inputReader = new InputStreamReader(connection.getInputStream());
-        BufferedReader reader = new BufferedReader(inputReader);
-        String response = reader.lines().collect(Collectors.joining());
-        reader.close();
-
-        if (connection.getResponseCode() != 200) {
-            throw new RuntimeException("Failed to ping the server " + ip + ":" + port + ". Status code: " + connection.getResponseCode());
+    public static Ping generate(Redis redis, String ip, int port) throws IOException {
+        String response = null;
+        if (redis != null) {
+            response = getRedisResponse(redis, ip, port);
         }
-        JsonParser jsonParser = new JsonParser();
-        JsonObject json = jsonParser.parse(response).getAsJsonObject();
+        if (response == null) {
+            response = getRestResponse(ip, port);
+        }
+        if (response == null) {
+            return new Ping(0, 0, false);
+        }
+        JsonObject json = PARSER.parse(response).getAsJsonObject();
         if (json.has("error")) {
             return new Ping(0, 0, false);
         } else {
@@ -66,5 +65,23 @@ public class Ping {
             int maxPlayers = json.get("players").getAsJsonObject().get("max").getAsInt();
             return new Ping(onlinePlayers, maxPlayers, true);
         }
+    }
+
+    private static String getRestResponse(String ip, int port) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) API_ROUTE.apply(ip, port).openConnection();
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+        InputStreamReader inputReader = new InputStreamReader(connection.getInputStream());
+        BufferedReader reader = new BufferedReader(inputReader);
+        String response = reader.lines().collect(Collectors.joining());
+        reader.close();
+        return connection.getResponseCode() != 200 ? null : response;
+    }
+
+    private static String getRedisResponse(Redis redis, String ip, int port) {
+        String id = ip + ":" + port;
+        return redis.provideJedis((jedis) -> {
+            return jedis.get(id);
+        });
     }
 }

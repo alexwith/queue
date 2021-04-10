@@ -3,6 +3,7 @@ package me.hyfe.queue.objects;
 import me.hyfe.helper.menu.gui.Gui;
 import me.hyfe.helper.menu.item.Item;
 import me.hyfe.helper.text.replacer.Replacer;
+import me.hyfe.queue.redis.Redis;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -52,9 +53,9 @@ public class Server {
         return this.latestPing;
     }
 
-    public void ping() {
+    public void ping(Redis redis) {
         try {
-            this.latestPing = Ping.generate(this.ip, this.port);
+            this.latestPing = Ping.generate(redis, this.ip, this.port);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

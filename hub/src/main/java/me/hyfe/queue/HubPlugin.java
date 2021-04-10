@@ -4,7 +4,10 @@ import me.hyfe.helper.Events;
 import me.hyfe.helper.config.Config;
 import me.hyfe.helper.plugin.HelperPlugin;
 import me.hyfe.queue.configs.ConfigKeys;
+import me.hyfe.queue.configs.RedisKeys;
 import me.hyfe.queue.managers.ServerManager;
+import me.hyfe.queue.redis.Credentials;
+import me.hyfe.queue.redis.Redis;
 import me.hyfe.queue.task.PingTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,21 +19,25 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class HubPlugin extends HelperPlugin {
     private ServerManager serverManager;
     private PingTask pingTask;
+    private Redis redis;
 
     @Override
     protected void enable() {
         this.configController.registerConfigs(
-                new ConfigKeys()
+                new ConfigKeys(),
+                new RedisKeys()
         );
         this.configController.registerConfigs(
                 Config.create("servers.yml", (path) -> path)
         );
         this.serverManager = new ServerManager(this);
-        this.pingTask = new PingTask(this.serverManager);
+        this.redis = this.createRedisInstance();
+        this.pingTask = new PingTask(this);
         this.commonListeners();
         this.serverSelectorListeners();
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -43,6 +50,18 @@ public class HubPlugin extends HelperPlugin {
 
     public ServerManager getServerManager() {
         return this.serverManager;
+    }
+
+    public Redis getRedis() {
+        return this.redis;
+    }
+
+    private Redis createRedisInstance() {
+        try {
+            return Redis.createInstance(Credentials.fromRedisKeys());
+        } catch (JedisConnectionException ex) {
+            return null;
+        }
     }
 
     private void serverSelectorListeners() {
