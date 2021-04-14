@@ -44,7 +44,7 @@ public class ServerSelectorMenu extends Gui {
         }
         for (Server server : this.serverManager.getServers("none")) {
             Ping ping = server.getLatestPing();
-            server.applyItem(this.plugin, this.player, this, ping.isOnline(), replacer -> replacer
+            server.applyItem(this.player, this, ping, replacer -> replacer
                     .set("online_players", ping.getOnlinePlayers())
                     .set("max_players", ping.getMaxPlayers())
                     .set("age", TimeUtil.format(TimeUnit.SECONDS, server.time()))

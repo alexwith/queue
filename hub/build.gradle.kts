@@ -12,9 +12,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly("com.google.code.gson:gson:2.8.6")
     implementation("me.hyfe.helper:core:1.0.0")
-    implementation("redis.clients:jedis:3.5.1")
 }
 
 tasks.processResources {

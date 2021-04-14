@@ -1,4 +1,4 @@
-ping-interval: 10 # ticks, 1 second = 20 ticks
+ping-interval: 40 # ticks, 1 second = 20 ticks
 
 compass-item:
   type: compass

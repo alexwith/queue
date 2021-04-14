@@ -31,9 +31,7 @@ categories:
 servers:
   factions1:
     category: factions
-    ping:
-      ip: play.example.com
-      port: 25566
+    node-identifier: factions1 # this needs to be the exactly same as in the QueueNode
     release:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
@@ -53,11 +51,18 @@ servers:
         - "&cOffline"
         - ""
         - "&7Age &c%age%"
+    whitelisted-item:
+      type: diamond_sword
+      name: "&cFactions1"
+      lore:
+        - "&eWhitelisted"
+        - ""
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
   factions2:
     category: factions
-    ping:
-      ip: play.example.com
-      port: 25566
+    node-identifier: game-server
     release:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
@@ -77,11 +82,18 @@ servers:
         - "&cOffline"
         - ""
         - "&7Age &c%age%"
+    whitelisted-item:
+      type: diamond_sword
+      name: "&cFactions1"
+      lore:
+        - "&eWhitelisted"
+        - ""
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
   skyblock1:
     category: skyblock
-    ping:
-      ip: play.example.com
-      port: 25566
+    node-identifier: skyblock1
     release:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
@@ -101,11 +113,18 @@ servers:
         - "&cOffline"
         - ""
         - "&7Age &c%age%"
+    whitelisted-item:
+      type: diamond_sword
+      name: "&cFactions1"
+      lore:
+        - "&eWhitelisted"
+        - ""
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
   skyblock2:
     category: skyblock
-    ping:
-      ip: play.example.com
-      port: 25566
+    node-identifier: skyblock2
     release:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
@@ -125,11 +144,18 @@ servers:
         - "&cOffline"
         - ""
         - "&7Age &c%age%"
+    whitelisted-item:
+      type: diamond_sword
+      name: "&cFactions1"
+      lore:
+        - "&eWhitelisted"
+        - ""
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"
   survival:
     category: none
-    ping:
-      ip: play.example.com
-      port: 25566
+    node-identifier: survival
     release:
       date: "10/03/2021" # dd/mm/yyyy
       time: "13:00"
@@ -149,3 +175,12 @@ servers:
         - "&cOffline"
         - ""
         - "&7Age &c%age%"
+    whitelisted-item:
+      type: diamond_sword
+      name: "&cFactions1"
+      lore:
+        - "&eWhitelisted"
+        - ""
+        - "&7Players &a%online_players%&8/&a%max_players%"
+        - ""
+        - "&7Age &a%age%"

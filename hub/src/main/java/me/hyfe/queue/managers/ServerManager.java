@@ -78,16 +78,16 @@ public class ServerManager {
         Config config = this.plugin.getConfig("servers.yml");
         for (String key : config.getKeys("servers")) {
             UnaryOperator<String> path = (extension) -> "servers." + key + "." + extension;
+            String nodeId = config.tryGet(path.apply("node-identifier"));
             String category = config.tryGet(path.apply("category"));
-            String ip = config.tryGet(path.apply("ping.ip"));
-            int port = config.tryGet(path.apply("ping.port"));
             String releaseDate = config.tryGet(path.apply("release.date"));
             String releaseTime = config.tryGet(path.apply("release.time"));
             String releaseTimeZone = config.tryGet(path.apply("release.time-zone"));
             int slot = config.tryGet(path.apply("slot"));
             ItemStack onlineItem = ItemStackBuilder.of(config, path.apply("online-item")).build();
             ItemStack offlineItem = ItemStackBuilder.of(config, path.apply("offline-item")).build();
-            Server server = new Server(key, category, releaseTimeZone, releaseDate, releaseTime, ip, port, slot, onlineItem, offlineItem);
+            ItemStack whitelistedItem = ItemStackBuilder.of(config, path.apply("whitelisted-item")).build();
+            Server server = new Server(key, nodeId, releaseTimeZone, releaseDate, releaseTime, slot, onlineItem, offlineItem, whitelistedItem);
             this.servers.put(key, server);
             if (!this.categoryRelations.containsKey(category)) {
                 this.categoryRelations.put(category, new HashSet<>());

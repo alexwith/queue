@@ -26,5 +26,7 @@ subprojects {
 
     dependencies {
         implementation("org.jetbrains:annotations:16.0.2")
+        implementation("redis.clients:jedis:3.5.1")
+        compileOnly("com.google.code.gson:gson:2.8.6")
     }
 }
