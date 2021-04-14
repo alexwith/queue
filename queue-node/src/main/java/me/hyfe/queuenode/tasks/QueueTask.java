@@ -12,6 +12,7 @@ import me.hyfe.queuenode.queue.QueuePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class QueueTask implements Runnable, Terminable {
     private final QueueManager queueManager;
@@ -29,14 +30,17 @@ public class QueueTask implements Runnable, Terminable {
         if (this.queue.length() == 0 || this.queue.isPaused()) {
             return;
         }
-        if (!this.queueManager.isOnline(this.queue.getServer())) {
-            for (int i = 0; i < this.queue.length(); i++) {
-                QueuePlayer queuedPlayer = this.queue.poll();
-                if (queuedPlayer == null) {
-                    break;
-                }
-                LangKeys.SERVER_OFFLINE.send(queuedPlayer.getPlayer());
-            }
+        String server = this.queue.getServer();
+        if (!this.queueManager.isOnline(server)) {
+            this.consumeAndPauseQueue((player) -> {
+                LangKeys.SERVER_OFFLINE.send(player.getPlayer());
+            });
+            return;
+        }
+        if (this.queueManager.isWhitelisted(server)) {
+            this.consumeAndPauseQueue((player) -> {
+                LangKeys.SERVER_WHITELISTED.send(player.getPlayer());
+            });
             return;
         }
         QueuePlayer queuePlayer = this.queue.poll();
@@ -44,16 +48,25 @@ public class QueueTask implements Runnable, Terminable {
             return;
         }
         Player player = queuePlayer.getPlayer();
-        this.queueManager.callTransit(player.getUniqueId(), false);
         LangKeys.SENDING_SERVER.send(player, replacer -> replacer
                 .set("server", this.queue.getServer())
         );
-        //this.serverSender.accept(player);
-        this.queueManager.callTransit(player.getUniqueId(), true);
+        this.queueManager.sendToServer(player, server);
     }
 
     @Override
     public void close() {
         this.task.close();
+    }
+
+    private void consumeAndPauseQueue(Consumer<QueuePlayer> consumer) {
+        this.queue.setPaused(true);
+        for (int i = 0; i < this.queue.length(); i++) {
+            QueuePlayer player = this.queue.get(i);
+            if (player == null) {
+                continue;
+            }
+            consumer.accept(player);
+        }
     }
 }

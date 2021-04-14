@@ -1,34 +1,40 @@
 package me.hyfe.queuenode.queue;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import me.hyfe.helper.Schedulers;
 import me.hyfe.helper.config.ConfigController;
 import me.hyfe.helper.promise.Promise;
 import me.hyfe.queuenode.Node;
+import me.hyfe.queuenode.configs.ConfigKeys;
 import me.hyfe.queuenode.configs.LangKeys;
 import me.hyfe.queuenode.priority.PriorityManager;
 import me.hyfe.queuenode.tasks.PositionTask;
 import me.hyfe.queuenode.tasks.QueueTask;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class QueueManager {
     private final Node node;
-    private final PositionTask positionTask;
+    private final Optional<PositionTask> positionTask;
     private final PriorityManager priorityManager;
 
     private final Map<String, Queue> map = new ConcurrentHashMap<>();
     private final Set<QueueTask> queueTasks = new HashSet<>();
-    private final Set<UUID> inTransit = new HashSet<>();
 
     public QueueManager(Node node) {
         this.node = node;
-        this.positionTask = new PositionTask(this.node);
+        this.positionTask = PositionTask.tryStart(this);
         this.priorityManager = new PriorityManager();
     }
 
@@ -41,11 +47,30 @@ public class QueueManager {
     }
 
     public boolean isOnline(String server) {
-        return false;
+        return this.node.getRedis().provideJedis((jedis) -> {
+            return jedis.exists(server.concat("-queue"));
+        });
+    }
+
+    public boolean isWhitelisted(String server) {
+        JsonParser parser = new JsonParser();
+        return this.node.getRedis().provideJedis((jedis) -> {
+            String key = server.concat("-queue");
+            if (jedis.exists(key)) {
+                return false;
+            }
+            String jsonString = jedis.get(key);
+            JsonObject json = parser.parse(jsonString).getAsJsonObject();
+            return json.get("whitelisted").getAsBoolean();
+        });
     }
 
     public Collection<Queue> getQueues() {
         return this.map.values();
+    }
+
+    public Queue getQueue(String server) {
+        return this.map.get(server);
     }
 
     public Promise<Void> sendPosition(Player player, UUID uuid) {
@@ -60,21 +85,9 @@ public class QueueManager {
         });
     }
 
-    public boolean isIntTransit(UUID uuid) {
-        return this.inTransit.contains(uuid);
-    }
-
-    public void callTransit(UUID uuid, boolean complete) {
-        if (complete) {
-            this.inTransit.remove(uuid);
-        } else {
-            this.inTransit.add(uuid);
-        }
-    }
-
-    public Promise<Void> clearQueues() {
-        return Schedulers.async().run(() -> {
-            this.positionTask.close();
+    public void clearQueues() {
+        Schedulers.async().run(() -> {
+            this.positionTask.ifPresent(PositionTask::close);
             for (QueueTask task : this.queueTasks) {
                 task.close();
             }
@@ -82,15 +95,6 @@ public class QueueManager {
                 queue.clear();
             }
         });
-    }
-
-    public Queue getQueue(String server) {
-        String key = server.concat("-queue");
-        return this.map.get(key);
-    }
-
-    public Promise<Boolean> isInQueue(UUID uuid) {
-        return Schedulers.async().supply(() -> this.getInQueue(uuid).join() != null);
     }
 
     public Promise<Queue> getInQueue(UUID uuid) {
@@ -106,26 +110,44 @@ public class QueueManager {
         });
     }
 
-    public Promise<Void> queue(Player player, UUID uuid, String server) {
+    public Promise<Void> queue(Player player, String server) {
         return Schedulers.async().run(() -> {
             String key = server.concat("-queue");
-            if (!this.map.containsKey(key)) {
+            UUID uuid = player.getUniqueId();
+            if (ConfigKeys.NON_HUB_NODES.get().contains(server) && !this.map.containsKey(key)) {
                 Queue queue = this.createQueue(key, server);
                 this.map.put(key, queue);
                 this.queueTasks.add(new QueueTask(this, queue));
+            }
+            if (!this.map.containsKey(key)) {
+                if (ConfigKeys.NON_HUB_NODES.get().contains(server)) {
+                    Queue queue = this.createQueue(key, server);
+                    this.map.put(key, queue);
+                    this.queueTasks.add(new QueueTask(this, queue));
+                } else {
+                    LangKeys.QUEUE_NOT_FOUND.send(player);
+                    return;
+                }
+            }
+            Queue queue = this.getInQueue(uuid).join();
+            if (queue != null) {
+                LangKeys.ALREADY_QUEUED.send(player, replacer -> replacer
+                        .set("server", queue.getServer())
+                );
+                return;
             }
             LangKeys.JOINED_QUEUE.send(player, replacer -> replacer
                     .set("server", server)
             );
             QueuePlayer proxyPlayer = QueuePlayer.of(uuid, this.priorityManager.getPriority(player));
-            Queue queue = this.map.get(key);
-            queue.queue(proxyPlayer);
+            this.map.get(key).queue(proxyPlayer);
             this.sendPosition(player, uuid);
         });
     }
 
-    public Promise<Void> dequeue(Player player, UUID uuid) {
+    public Promise<Void> dequeue(Player player) {
         return Schedulers.async().run(() -> {
+            UUID uuid = player.getUniqueId();
             Queue queue = this.getInQueue(uuid).join();
             if (queue == null) {
                 return;
@@ -133,5 +155,17 @@ public class QueueManager {
             QueuePlayer proxyPlayer = QueuePlayer.of(uuid, this.priorityManager.getPriority(player));
             queue.dequeue(proxyPlayer);
         });
+    }
+
+    public void sendToServer(Player player, String server) {
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            DataOutputStream stream = new DataOutputStream(byteStream);
+            stream.writeUTF("Connect");
+            stream.writeUTF(server);
+            player.sendPluginMessage(this.node, "BungeeCord", byteStream.toByteArray());
+        } catch (final IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -7,7 +7,6 @@ non-hub-nodes: # these are the proxy names of all the non hub servers/nodes
 
 poll-interval: 5000 # milliseconds
 position-interval: 5000 # milliseconds
-bypass-permission: "queue.bypass"
 
 priorities:
   VIP:
