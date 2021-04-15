@@ -70,7 +70,7 @@ public class QueueManager {
     }
 
     public Queue getQueue(String server) {
-        return this.map.get(server);
+        return this.map.get(server.concat("-queue").toLowerCase());
     }
 
     public Promise<Void> sendPosition(Player player, UUID uuid) {
@@ -112,7 +112,7 @@ public class QueueManager {
 
     public Promise<Void> queue(Player player, String server) {
         return Schedulers.async().run(() -> {
-            String key = server.concat("-queue");
+            String key = server.concat("-queue").toLowerCase();
             UUID uuid = player.getUniqueId();
             if (ConfigKeys.NON_HUB_NODES.get().contains(server) && !this.map.containsKey(key)) {
                 Queue queue = this.createQueue(key, server);
