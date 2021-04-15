@@ -27,9 +27,11 @@ public class QueueTask implements Runnable, Terminable {
 
     @Override
     public void run() {
+        System.out.println("polling");
         if (this.queue.length() == 0 || this.queue.isPaused()) {
             return;
         }
+        System.out.println("server");
         String server = this.queue.getServer();
         if (!this.queueManager.isOnline(server)) {
             this.consumeAndPauseQueue((player) -> {
@@ -37,13 +39,16 @@ public class QueueTask implements Runnable, Terminable {
             });
             return;
         }
+        System.out.println("online");
         if (this.queueManager.isWhitelisted(server)) {
             this.consumeAndPauseQueue((player) -> {
                 LangKeys.SERVER_WHITELISTED.send(player.getPlayer());
             });
             return;
         }
+        System.out.println("not whitelisted");
         QueuePlayer queuePlayer = this.queue.poll();
+        System.out.println("player: " + queuePlayer);
         if (queuePlayer == null) {
             return;
         }
@@ -51,6 +56,7 @@ public class QueueTask implements Runnable, Terminable {
         LangKeys.SENDING_SERVER.send(player, replacer -> replacer
                 .set("server", this.queue.getServer())
         );
+        System.out.println("send!");
         this.queueManager.sendToServer(player, server);
     }
 
