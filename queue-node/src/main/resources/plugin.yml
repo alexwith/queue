@@ -1,6 +1,7 @@
 name: QueueNode
 main: me.hyfe.queuenode.Node
 version: 1.0.0
+softdepend: [ LuckPerms ]
 
 permissions:
   queue.admin:

@@ -25,7 +25,7 @@ public class QueueAdminCommand {
                                 .argument("pause")
                                 .argument(String.class, "queue")
                                 .handler((sender, context) -> {
-                                    String server = context.arg(0);
+                                    String server = context.arg(1);
                                     Queue queue = this.queueManager.getQueue(server);
                                     if (queue == null) {
                                         LangKeys.QUEUE_NOT_FOUND.send(sender);
@@ -38,7 +38,7 @@ public class QueueAdminCommand {
                                 .argument("resume")
                                 .argument(String.class, "queue")
                                 .handler((sender, context) -> {
-                                    String server = context.arg(0);
+                                    String server = context.arg(1);
                                     Queue queue = this.queueManager.getQueue(server);
                                     if (queue == null) {
                                         LangKeys.QUEUE_NOT_FOUND.send(sender);
@@ -52,7 +52,7 @@ public class QueueAdminCommand {
                                 .argument("clear")
                                 .argument(String.class, "queue")
                                 .handler((sender, context) -> {
-                                    String server = context.arg(0);
+                                    String server = context.arg(1);
                                     Queue queue = this.queueManager.getQueue(server);
                                     if (queue == null) {
                                         LangKeys.QUEUE_NOT_FOUND.send(sender);
