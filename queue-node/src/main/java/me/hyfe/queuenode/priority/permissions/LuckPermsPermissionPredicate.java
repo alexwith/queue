@@ -12,6 +12,8 @@ public class LuckPermsPermissionPredicate implements PermissionPredicate {
 
     @Override
     public boolean test(Player player, String permission) {
+        System.out.println(this.userManager);
+        System.out.println(player);
         User user = this.userManager.getUser(player.getUniqueId());
         if (user == null) {
             return false;
