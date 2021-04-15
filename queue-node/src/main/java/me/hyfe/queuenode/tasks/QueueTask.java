@@ -27,7 +27,7 @@ public class QueueTask implements Runnable, Terminable {
 
     @Override
     public void run() {
-        System.out.println("polling");
+        System.out.println("polling, is paused: " + this.queue.isPaused());
         if (this.queue.length() == 0 || this.queue.isPaused()) {
             return;
         }
