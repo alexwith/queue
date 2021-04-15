@@ -18,10 +18,11 @@ public class QueueCommand {
 
     private void createCommands() {
         Commands.create("queue", "queuejoin", "joinqueue")
-                .description("Queue to join a server.")
                 .player()
+                .description("Queue to join a server.")
                 .subs(Commands.createSub()
                         .player()
+                        .description("Join a queue.")
                         .argument(String.class, "queue")
                         .handler((player, context) -> {
                             String server = context.arg(0);
@@ -32,17 +33,11 @@ public class QueueCommand {
                     context.sendUsage(player);
                 });
         Commands.create("dequeue", "queueleave", "leavequeue")
-                .description("Leave your current queue.")
                 .player()
-                .subs(Commands.createSub()
-                        .player()
-                        .handler((player, context) -> {
-                            this.queueManager.dequeue(player);
-                            LangKeys.LEFT_QUEUE.send(player);
-                        })
-                )
+                .description("Leave your current queue.")
                 .handler((player, context) -> {
-                    context.sendUsage(player);
+                    this.queueManager.dequeue(player);
+                    LangKeys.LEFT_QUEUE.send(player);
                 });
     }
 }

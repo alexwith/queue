@@ -24,6 +24,8 @@ public class PriorityManager {
 
     public int getPriority(Player player) {
         for (Priority priority : this.priorities) {
+            Bukkit.broadcastMessage("Trying priority: " + priority + " with perm " + priority.getPermission());
+            Bukkit.broadcastMessage(player.getName() + " has the permission: " + this.permissionPredicate.test(player, priority.getPermission()) + " - priority is " + priority.getPriority());
             if (this.permissionPredicate.test(player, priority.getPermission())) {
                 return priority.getPriority();
             }

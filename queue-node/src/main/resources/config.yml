@@ -5,8 +5,8 @@ non-hub-nodes: # these are the proxy names of all the non hub servers/nodes
   - "factions1"
   - "game-server"
 
-poll-interval: 5000 # milliseconds
-position-interval: 5000 # milliseconds
+poll-interval: 5000 # milliseconds, how often a player is sent to the server
+position-interval: 5000 # milliseconds, how often the player gets a message about their position
 
 priorities:
   VIP:

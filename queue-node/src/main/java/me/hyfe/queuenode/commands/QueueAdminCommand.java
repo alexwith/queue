@@ -20,8 +20,10 @@ public class QueueAdminCommand {
     private void createCommand() {
         Commands.create("queueadmin")
                 .description("Manage queues.")
+                .permission("queue.admin")
                 .subs(Commands.createSub()
                                 .player()
+                                .description("Pause a queue.")
                                 .argument("pause")
                                 .argument(String.class, "queue")
                                 .handler((sender, context) -> {
@@ -35,6 +37,7 @@ public class QueueAdminCommand {
                                     LangKeys.QUEUE_PAUSED.send(sender);
                                 }), Commands.createSub()
                                 .player()
+                                .description("Resume a queue.")
                                 .argument("resume")
                                 .argument(String.class, "queue")
                                 .handler((sender, context) -> {
@@ -49,6 +52,7 @@ public class QueueAdminCommand {
                                 }),
                         Commands.createSub()
                                 .player()
+                                .description("Clear a queue.")
                                 .argument("clear")
                                 .argument(String.class, "queue")
                                 .handler((sender, context) -> {
