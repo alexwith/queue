@@ -111,11 +111,6 @@ public class QueueManager {
         return Schedulers.async().run(() -> {
             String key = server.concat("-queue").toLowerCase();
             UUID uuid = player.getUniqueId();
-            if (ConfigKeys.NON_HUB_NODES.get().contains(server) && !this.map.containsKey(key)) {
-                Queue queue = this.createQueue(key, server);
-                this.map.put(key, queue);
-                this.queueTasks.add(new QueueTask(this, queue));
-            }
             if (!this.map.containsKey(key)) {
                 if (ConfigKeys.NON_HUB_NODES.get().contains(server)) {
                     Queue queue = this.createQueue(key, server);
