@@ -36,14 +36,11 @@ public class QueueManager {
         this.node = node;
         this.positionTask = PositionTask.tryStart(this);
         this.priorityManager = new PriorityManager();
+        this.priorityManager.load(node.getConfigController());
     }
 
     public Queue createQueue(String key, String server) {
         return new Queue(this.node, key, server);
-    }
-
-    public void loadPriorities(ConfigController configController) {
-        this.priorityManager.load(configController);
     }
 
     public boolean isOnline(String server) {
