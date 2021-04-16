@@ -38,7 +38,7 @@ public class Ping {
     }
 
     public static Ping generate(Redis redis, String id) throws IOException {
-        String finalId = id.concat("-status");
+        String finalId = id.concat("-status").toLowerCase();
         return redis.provideJedis((jedis) -> {
             if (!jedis.exists(finalId)) {
                 return new Ping(0, 0, false, false);

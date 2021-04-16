@@ -16,7 +16,7 @@ public class StatusTask implements Runnable, Terminable {
     private final Server server;
     private final Task handle;
 
-    private final String key = ConfigKeys.NODE_IDENTIFIER.get().concat("-status");
+    private final String key = ConfigKeys.NODE_IDENTIFIER.get().concat("-status").toLowerCase();
 
     private static final int TICK_INTERVAL = 100; // 5 seconds
 

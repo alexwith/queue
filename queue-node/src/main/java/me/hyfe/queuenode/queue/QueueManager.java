@@ -45,14 +45,14 @@ public class QueueManager {
 
     public boolean isOnline(String server) {
         return this.node.getRedis().provideJedis((jedis) -> {
-            return jedis.exists(server.concat("-queue"));
+            return jedis.exists(server.concat("-queue").toLowerCase());
         });
     }
 
     public boolean isWhitelisted(String server) {
         JsonParser parser = new JsonParser();
         return this.node.getRedis().provideJedis((jedis) -> {
-            String key = server.concat("-queue");
+            String key = server.concat("-queue").toLowerCase();
             if (jedis.exists(key)) {
                 return false;
             }

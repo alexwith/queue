@@ -22,15 +22,23 @@ public class QueueTask implements Runnable, Terminable {
     public QueueTask(QueueManager queueManager, Queue queue) {
         this.queueManager = queueManager;
         this.queue = queue;
+        System.out.println("create queue task: " + ConfigKeys.POLL_INTERVAL.get());
         this.task = Schedulers.async().runRepeating(this, ConfigKeys.POLL_INTERVAL.get(), TimeUnit.MILLISECONDS, ConfigKeys.POLL_INTERVAL.get(), TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void run() {
-        if (this.queue.length() == 0 || this.queue.isPaused()) {
+        if (this.queue.length() == 0) {
             return;
         }
         String server = this.queue.getServer();
+        if (this.queue.isPaused()) {
+            if (this.queueManager.isOnline(server)) {
+                this.queue.setPaused(false);
+            } else {
+                return;
+            }
+        }
         if (!this.queueManager.isOnline(server)) {
             this.consumeAndPauseQueue((player) -> {
                 LangKeys.SERVER_OFFLINE.send(player.getPlayer());
