@@ -6,6 +6,7 @@ import me.hyfe.helper.scheduler.Task;
 import me.hyfe.helper.terminable.Terminable;
 import me.hyfe.queuenode.configs.ConfigKeys;
 import me.hyfe.queuenode.configs.LangKeys;
+import me.hyfe.queuenode.pause.PauseReason;
 import me.hyfe.queuenode.queue.Queue;
 import me.hyfe.queuenode.queue.QueueManager;
 import me.hyfe.queuenode.queue.QueuePlayer;
@@ -33,8 +34,8 @@ public class QueueTask implements Runnable, Terminable {
         }
         String server = this.queue.getServer();
         if (this.queue.isPaused()) {
-            if (this.queueManager.isOnline(server)) {
-                this.queue.setPaused(false);
+            if (this.queueManager.isOnline(server) && this.queue.getPauseReason().equals(PauseReason.AUTO)) {
+                this.queue.setPaused(false, PauseReason.AUTO);
             } else {
                 return;
             }
@@ -68,7 +69,7 @@ public class QueueTask implements Runnable, Terminable {
     }
 
     private void consumeAndPauseQueue(Consumer<QueuePlayer> consumer) {
-        this.queue.setPaused(true);
+        this.queue.setPaused(true, PauseReason.AUTO);
         for (int i = 0; i < this.queue.length(); i++) {
             QueuePlayer player = this.queue.get(i);
             if (player == null) {

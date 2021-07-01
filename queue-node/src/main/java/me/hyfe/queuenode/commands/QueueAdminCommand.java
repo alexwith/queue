@@ -4,6 +4,7 @@ import me.hyfe.helper.Commands;
 import me.hyfe.queuenode.Node;
 import me.hyfe.queuenode.configs.ConfigKeys;
 import me.hyfe.queuenode.configs.LangKeys;
+import me.hyfe.queuenode.pause.PauseReason;
 import me.hyfe.queuenode.queue.Queue;
 import me.hyfe.queuenode.queue.QueueManager;
 
@@ -22,7 +23,6 @@ public class QueueAdminCommand {
                 .description("Manage queues.")
                 .permission("queue.admin")
                 .subs(Commands.createSub()
-                                .player()
                                 .description("Pause a queue.")
                                 .argument("pause")
                                 .argument(String.class, "queue")
@@ -33,10 +33,9 @@ public class QueueAdminCommand {
                                         LangKeys.QUEUE_NOT_FOUND.send(sender);
                                         return;
                                     }
-                                    queue.setPaused(true);
+                                    queue.setPaused(true, PauseReason.MANUAL);
                                     LangKeys.QUEUE_PAUSED.send(sender);
                                 }), Commands.createSub()
-                                .player()
                                 .description("Resume a queue.")
                                 .argument("resume")
                                 .argument(String.class, "queue")
@@ -47,11 +46,10 @@ public class QueueAdminCommand {
                                         LangKeys.QUEUE_NOT_FOUND.send(sender);
                                         return;
                                     }
-                                    queue.setPaused(false);
+                                    queue.setPaused(false, PauseReason.MANUAL);
                                     LangKeys.QUEUE_RESUMED.send(sender);
                                 }),
                         Commands.createSub()
-                                .player()
                                 .description("Clear a queue.")
                                 .argument("clear")
                                 .argument(String.class, "queue")
