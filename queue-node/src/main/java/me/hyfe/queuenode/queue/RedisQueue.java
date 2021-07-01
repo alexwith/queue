@@ -5,8 +5,8 @@ import me.hyfe.queuenode.redis.Redis;
 import redis.clients.jedis.ListPosition;
 
 public abstract class RedisQueue<V extends Comparable<V>> {
-    private final Redis redis;
-    private final String key;
+    protected final Redis redis;
+    protected final String key;
 
     public RedisQueue(Node node, String key) {
         this.redis = node.getRedis();

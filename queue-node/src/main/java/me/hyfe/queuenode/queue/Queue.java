@@ -4,12 +4,12 @@ import me.hyfe.queuenode.Node;
 
 public class Queue extends RedisQueue<QueuePlayer> {
     private final String server;
-
-    private boolean isPaused = false;
+    private final String pauseKey;
 
     public Queue(Node node, String key, String server) {
         super(node, key);
         this.server = server;
+        this.pauseKey = this.key.concat("pause");
     }
 
     public String getServer() {
@@ -27,10 +27,14 @@ public class Queue extends RedisQueue<QueuePlayer> {
     }
 
     public boolean isPaused() {
-        return this.isPaused;
+        return this.redis.provideJedis((jedis) -> {
+            return Boolean.parseBoolean(jedis.get(this.pauseKey))
+        });
     }
 
     public void setPaused(boolean paused) {
-        isPaused = paused;
+        this.redis.provideJedis((jedis) -> {
+            jedis.set(this.pauseKey, Boolean.toString(paused));
+        });
     }
 }
