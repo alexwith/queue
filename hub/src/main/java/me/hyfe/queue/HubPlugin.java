@@ -1,5 +1,6 @@
 package me.hyfe.queue;
 
+import me.hyfe.helper.Commands;
 import me.hyfe.helper.Events;
 import me.hyfe.helper.config.Config;
 import me.hyfe.helper.plugin.HelperPlugin;
@@ -39,7 +40,7 @@ public class HubPlugin extends HelperPlugin {
         this.redis = this.createRedisInstance();
         this.pingTask = new PingTask(this);
         this.commonListeners();
-        this.serverSelectorListeners();
+        this.serverSelector();
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
@@ -64,7 +65,7 @@ public class HubPlugin extends HelperPlugin {
         }
     }
 
-    private void serverSelectorListeners() {
+    private void serverSelector() {
         ItemStack compassItem = ConfigKeys.COMPASS_ITEM.get();
         int compassSlot = ConfigKeys.COMPASS_SLOT.get();
         Events.subscribe(PlayerJoinEvent.class)
@@ -81,6 +82,11 @@ public class HubPlugin extends HelperPlugin {
                         return;
                     }
                     this.serverManager.createServerSelectorMenu(player).open();
+                });
+        Commands.create("serverselector", "selector")
+                .player()
+                .handler((sender, context) -> {
+                    this.serverManager.createServerSelectorMenu(sender).open();
                 });
     }
 
